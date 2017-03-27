@@ -1,0 +1,5 @@
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\bin\Release\NetUtils.dll
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\bin\Release\NetUtils.pdb
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Release\NetUtils.csprojResolveAssemblyReference.cache
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Release\NetUtils.dll
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Release\NetUtils.pdb

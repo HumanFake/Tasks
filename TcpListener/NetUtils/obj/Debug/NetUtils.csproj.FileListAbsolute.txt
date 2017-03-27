@@ -1,0 +1,10 @@
+C:\Users\Fairan\OneDrive\C#\TcpListener\NetUtils\bin\Debug\NetUtils.dll
+C:\Users\Fairan\OneDrive\C#\TcpListener\NetUtils\bin\Debug\NetUtils.pdb
+C:\Users\Fairan\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.csprojResolveAssemblyReference.cache
+C:\Users\Fairan\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.dll
+C:\Users\Fairan\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.pdb
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\bin\Debug\NetUtils.dll
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\bin\Debug\NetUtils.pdb
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.csprojResolveAssemblyReference.cache
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.dll
+C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.pdb
