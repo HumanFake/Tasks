@@ -16,7 +16,7 @@ namespace UdpSelfCounter
         private readonly UdpClient _receiveClient;
         private readonly Sender _sendClient;
         private readonly List<IPAddress> _currentClients = new List<IPAddress>();
-        private readonly Timer _timer = new Timer(RecountTime);
+        private readonly Timer _recountTimer = new Timer(RecountTime);
 
         internal Receiver([NotNull] Sender sender, Port port)
         {
@@ -27,19 +27,36 @@ namespace UdpSelfCounter
 
             _currentClients.Add(NetIO.FindLocalIpAddress());
             _sendClient = sender;
-
-            _receiveClient = new UdpClient(port.GetPort);
+            try
+            {
+                _receiveClient = new UdpClient(port.GetPort);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"Не удалось запустить приложение под портом: {port.GetPort}");
+            }
+            try
+            {
+                _receiveClient = new UdpClient(0);
+                var ipEndPoint = _receiveClient.Client.LocalEndPoint as IPEndPoint;
+                var currentPort = ipEndPoint?.Port;
+                Console.WriteLine($"Автоматически выбран порт: {currentPort}");
+            }
+            catch (Exception ex)
+            {
+                throw new ReceiveException(ex.Message, ex);
+            }
             _receiveClient.JoinMulticastGroup(ProgramData.RemoteIpAddress);
-            
-            _timer.Elapsed += RecountDuplicates;
-            _timer.AutoReset = true;
+
+            _recountTimer.Elapsed += RecountDuplicates;
+            _recountTimer.AutoReset = true;
         }
 
         internal void Listen()
         {
             try
             {
-                _timer.Start();
+                _recountTimer.Start();
 
                 DisplayCopyCount(_currentClients.Count);
                 while (true)
@@ -63,7 +80,7 @@ namespace UdpSelfCounter
             finally
             {
                 _receiveClient?.Close();
-                _timer?.Close();
+                _recountTimer?.Close();
             }
         }
 

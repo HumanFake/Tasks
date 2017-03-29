@@ -45,3 +45,12 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.cache
+UdpSelfCounter/.vs/UdpSelfCounter/v15/.suo
+UdpSelfCounter/.vs/*
+UdpSelfCounter/UdpSelfCounter/bin/*
+UdpSelfCounter/UdpSelfCounter/obj/Debug/*
+UdpSelfCounter/UdpSelfCounter/obj/Release/*
+UdpSelfCounter/UdpSelfCounter/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
+*.cache
+TcpListener/NetUtils/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
