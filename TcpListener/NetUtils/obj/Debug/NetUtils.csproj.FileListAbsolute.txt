@@ -8,3 +8,8 @@ C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\bin\Debug\NetUtils.pdb
 C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.csprojResolveAssemblyReference.cache
 C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.dll
 C:\Users\Fai\OneDrive\C#\TcpListener\NetUtils\obj\Debug\NetUtils.pdb
+D:\Tasks\TcpListener\NetUtils\bin\Debug\NetUtils.dll
+D:\Tasks\TcpListener\NetUtils\bin\Debug\NetUtils.pdb
+D:\Tasks\TcpListener\NetUtils\obj\Debug\NetUtils.csprojResolveAssemblyReference.cache
+D:\Tasks\TcpListener\NetUtils\obj\Debug\NetUtils.dll
+D:\Tasks\TcpListener\NetUtils\obj\Debug\NetUtils.pdb
