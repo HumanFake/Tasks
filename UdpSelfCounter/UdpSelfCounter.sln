@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UdpSelfCounter", "UdpSelfCounter\UdpSelfCounter.csproj", "{20103AB1-D85F-4D2B-AA2C-7ED465519BAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUtils", "..\TcpListener\NetUtils\NetUtils.csproj", "{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUtils", "..\NetUtils\NetUtils.csproj", "{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
