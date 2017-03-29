@@ -58,7 +58,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NetUtils\NetUtils.csproj">
+    <ProjectReference Include="..\..\NetUtils\NetUtils.csproj">
       <Project>{d1a1ac28-fc44-437b-9e5d-66ae4e01884f}</Project>
       <Name>NetUtils</Name>
     </ProjectReference>

@@ -12,13 +12,30 @@ namespace TcpListener
         private const int BufferSize = 1024 * 1024;
         private readonly System.Net.Sockets.TcpListener _server;
 
-        internal Server(int port, [NotNull] IPAddress address)
+        internal Server(Port port, [NotNull] IPAddress address)
         {
             if (address == null)
             {
                 throw new ArgumentNullException(nameof(address));
             }
-            _server = new System.Net.Sockets.TcpListener(address, port);
+            try
+            {
+                _server = new System.Net.Sockets.TcpListener(address, port.GetPort);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"Не удаётся запустить сервер с протом: {port.GetPort}");
+                try
+                {
+                    _server = new System.Net.Sockets.TcpListener(address, 0);
+                    var ipEndPoint = _server.Server.LocalEndPoint as IPEndPoint;
+                    Console.WriteLine($"Порт выбран автоматически: {ipEndPoint?.Port}");
+                }
+                catch (Exception e)
+                {
+                    throw new ServerException(e);
+                }
+            }
         }
         
         internal void Listen()
@@ -30,8 +47,9 @@ namespace TcpListener
                 {
                     Console.WriteLine("Ожидание подключений... ");
                     var tcpClient = _server.AcceptTcpClient();
+                    var responseClient = new ResponseClient(tcpClient);
 
-                    var clientThread = new Thread(() => GetResponse(tcpClient));
+                    var clientThread = new Thread(() => GetResponse(responseClient));
                     clientThread.Start();
                 }
             }
@@ -58,30 +76,13 @@ namespace TcpListener
             }
         }
         
-        private static void GetResponse(TcpClient tcpClient)
+        private static void GetResponse(ResponseClient responseClient)
         {
             try
             {
-                using (tcpClient)
+                using (responseClient)
                 {
-                    long byteCount;
-                    using (var networkStream = tcpClient.GetStream())
-                    {
-                        Console.WriteLine("Подключен клиент. Выполнение запроса...");
-
-                        byteCount = 0;
-                        var buffer = new byte[BufferSize];
-                        while (true)
-                        {
-                            var readedBytes = networkStream.Read(buffer, 0, buffer.Length);
-                            if (readedBytes == 0)
-                            {
-                                break;
-                            }
-                            byteCount += readedBytes;
-                        }
-                    }
-                    Console.WriteLine($"Получено {byteCount}");
+                    responseClient.ResponceMessage();
                 }
             }
             catch (Exception)
@@ -93,6 +94,49 @@ namespace TcpListener
         protected override void FreeManagedResources()
         {
             _server?.Stop();
+        }
+
+        private class ResponseClient : Disposable
+        {
+            private readonly TcpClient _tcpClient;
+
+            internal ResponseClient(TcpClient tcpClient)
+            {
+                _tcpClient = tcpClient;
+            }
+
+            internal void ResponceMessage()
+            {
+                long byteCount;
+                var ipEndPoint = (IPEndPoint) _tcpClient.Client.LocalEndPoint;
+                using (var networkStream = _tcpClient.GetStream())
+                {
+                    Console.WriteLine($"Подключен клиент {ipEndPoint.Address}.\nВыполнение запроса...");
+
+                    byteCount = 0;
+                    var buffer = new byte[BufferSize];
+                    while (true)
+                    {
+                        var readedBytes = networkStream.Read(buffer, 0, buffer.Length);
+                        if (readedBytes == 0)
+                        {
+                            break;
+                        }
+                        byteCount += readedBytes;
+                    }
+                }
+                Console.WriteLine($"Приём данных с {ipEndPoint.Address} завершён. Получено {byteCount} байт.");
+            }
+
+            void ClearLine(int line)
+            {
+                Console.MoveBufferArea(0, line, Console.BufferWidth, 1, Console.BufferWidth, line, ' ', Console.ForegroundColor, Console.BackgroundColor);
+            }
+
+            protected override void FreeManagedResources()
+            {
+                _tcpClient?.Close();
+            }
         }
     }
 }

@@ -51,8 +51,17 @@ UdpSelfCounter/.vs/*
 UdpSelfCounter/UdpSelfCounter/bin/*
 NetUtils/bin/*
 NetUtils/obj/*
+TcpListener/TcpClient/bin/*
+TcpListener/TcpClient/obj/*
+TcpMultiFiles/TcpClient/bin/*
+TcpMultiFiles/TcpClient/obj/*
+TcpListener/TcpServer/bin/*
+TcpListener/TcpServer/obj/*
+TcpMultiFiles/TcpServer/bin/*
+TcpMultiFiles/TcpServer/obj/*
 UdpSelfCounter/UdpSelfCounter/obj/Debug/*
 UdpSelfCounter/UdpSelfCounter/obj/Release/*
 UdpSelfCounter/UdpSelfCounter/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
 *.cache
 TcpListener/NetUtils/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
+TcpListener/.vs/TcpListener/v15/.suo

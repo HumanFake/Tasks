@@ -16,7 +16,7 @@ namespace TcpListener
         private static void Main()
         {
             var port = NetIO.ReadPort();
-            var address = NetIO.ReadAddress();
+            var address = NetIO.FindLocalIpAddress();
 
             try
             {

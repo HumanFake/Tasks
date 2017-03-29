@@ -1,6 +1,0 @@
-N:\C#\TcpListener\TcpListener\bin\Debug\TcpListener.exe.config
-N:\C#\TcpListener\TcpListener\bin\Debug\TcpListener.exe
-N:\C#\TcpListener\TcpListener\bin\Debug\TcpListener.pdb
-N:\C#\TcpListener\TcpListener\obj\Debug\TcpListener.csprojResolveAssemblyReference.cache
-N:\C#\TcpListener\TcpListener\obj\Debug\TcpListener.exe
-N:\C#\TcpListener\TcpListener\obj\Debug\TcpListener.pdb

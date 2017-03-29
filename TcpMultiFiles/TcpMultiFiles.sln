@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpServer", "TcpListener\TcpServer.csproj", "{EE0ECA0A-7CBF-41DC-9923-8681C923637C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUtils", "..\TcpListener\NetUtils\NetUtils.csproj", "{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpClient", "..\TcpListener\TcpClient\TcpClient.csproj", "{89DF7FDE-4D3B-4F80-A514-08F271773047}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUtils", "..\NetUtils\NetUtils.csproj", "{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{EE0ECA0A-7CBF-41DC-9923-8681C923637C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE0ECA0A-7CBF-41DC-9923-8681C923637C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE0ECA0A-7CBF-41DC-9923-8681C923637C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89DF7FDE-4D3B-4F80-A514-08F271773047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{89DF7FDE-4D3B-4F80-A514-08F271773047}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89DF7FDE-4D3B-4F80-A514-08F271773047}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89DF7FDE-4D3B-4F80-A514-08F271773047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

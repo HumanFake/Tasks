@@ -20,7 +20,7 @@ namespace TcpListener
 
             try
             {
-                var server = new Server(port, address);
+                var server = new Server(port.GetPort, address);
 
                 _signalHandler += unused =>
                 {
