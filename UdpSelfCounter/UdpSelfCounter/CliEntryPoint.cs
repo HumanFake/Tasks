@@ -11,12 +11,10 @@ namespace UdpSelfCounter
         [DllImport("Kernel32", EntryPoint = "SetConsoleCtrlHandler")]
         private static extern bool SetSignalHandler(SignalHandler handler, bool addHandler);
 
-        private static SignalHandler _signalHandler;
 
         private static void Main()
         {
-            var localPort = NetIO.ReadPort();
-
+            var localPort = Port.ReadPort();
             try
             {
                 using (var sender = new Sender(localPort))
@@ -24,11 +22,11 @@ namespace UdpSelfCounter
                     sender.Send(ProgramData.EntryMessage);
 
                     var receiver = new Receiver(sender, localPort);
-                    _signalHandler += unused =>
+                    SignalHandler signalHandler = unused =>
                     {
                         receiver.StopListen();
                     };
-                    SetSignalHandler(_signalHandler, true);
+                    SetSignalHandler(signalHandler, true);
 
                     receiver.Listen();
                 }

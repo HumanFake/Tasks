@@ -9,6 +9,6 @@ namespace UdpSelfCounter
         internal const short OutMessage = 2;
         internal const short AnswerMessage = 3;
 
-        internal static readonly IPAddress RemoteIpAddress = IPAddress.Parse("239.255.255.1");
+        internal static readonly IPAddress BroadcasAddress = IPAddress.Parse("239.255.255.1");
     }
 }

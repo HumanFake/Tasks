@@ -2,16 +2,15 @@
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using JetBrains.Annotations;
 
 namespace NetUtils
 {
     public static class NetIO
     {
         private const string InvalidIp = "Недопустимый IP.";
-        private const string InvalidPort = "Недопустимое значение порта.";
-        private const int MaximumPort = 65535;
-        private const int MinimumPort = 1024;
         private const double BytesInMegaBytes = 1024.0;
+        private const double MilliseconsInSecond = 1000.0;
 
         public static IPAddress ReadAddress()
         {
@@ -37,26 +36,8 @@ namespace NetUtils
             return address;
         }
 
-        public static Port ReadPort()
-        {
-            int port;
-            while (true)
-            {
-                Console.Write("Введите порт: ");
-                var input = Console.ReadLine();
-                if (input != null && int.TryParse(input, out port))
-                {
-                    if (port > MinimumPort || port < MaximumPort)
-                    {
-                        break;
-                    }
-                }
-                Console.WriteLine(InvalidPort);
-            }
-            return new Port(port);
-        }
-
-        public static IPAddress FindLocalIpAddress()
+        [CanBeNull]
+        public static IPAddress FindLocalIpAddressOrNull()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
             return host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
@@ -69,7 +50,7 @@ namespace NetUtils
 
         public static double MillisecondToSecond(this long sourse)
         {
-            return sourse / 1000.0;
+            return sourse / MilliseconsInSecond;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace UdpSelfCounter
         internal Sender(Port port)
         {
             _sender = new UdpClient();
-            _endPoint = new IPEndPoint(ProgramData.RemoteIpAddress, port.GetPort);
+            _endPoint = new IPEndPoint(ProgramData.BroadcasAddress, port.GetPort);
         }
 
         internal void Send(short datagram)

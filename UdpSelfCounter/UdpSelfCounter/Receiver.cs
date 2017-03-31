@@ -13,6 +13,7 @@ namespace UdpSelfCounter
     {
         private const int RecountTime = 2000;
 
+        private readonly object _locker = new object();
         private readonly UdpClient _receiveClient;
         private readonly Sender _sendClient;
         private readonly List<IPAddress> _currentClients = new List<IPAddress>();
@@ -25,7 +26,7 @@ namespace UdpSelfCounter
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            _currentClients.Add(NetIO.FindLocalIpAddress());
+            _currentClients.Add(NetIO.FindLocalIpAddressOrNull());
             _sendClient = sender;
             try
             {
@@ -34,19 +35,19 @@ namespace UdpSelfCounter
             catch (Exception)
             {
                 Console.WriteLine($"Не удалось запустить приложение под портом: {port.GetPort}");
+                try
+                {
+                    _receiveClient = new UdpClient(0);
+                    var ipEndPoint = _receiveClient.Client.LocalEndPoint as IPEndPoint;
+                    var currentPort = ipEndPoint?.Port;
+                    Console.WriteLine($"Автоматически выбран порт: {currentPort}");
+                }
+                catch (Exception ex)
+                {
+                    throw new ReceiveException(ex.Message, ex);
+                }
             }
-            try
-            {
-                _receiveClient = new UdpClient(0);
-                var ipEndPoint = _receiveClient.Client.LocalEndPoint as IPEndPoint;
-                var currentPort = ipEndPoint?.Port;
-                Console.WriteLine($"Автоматически выбран порт: {currentPort}");
-            }
-            catch (Exception ex)
-            {
-                throw new ReceiveException(ex.Message, ex);
-            }
-            _receiveClient.JoinMulticastGroup(ProgramData.RemoteIpAddress);
+            _receiveClient.JoinMulticastGroup(ProgramData.BroadcasAddress);
 
             _recountTimer.Elapsed += RecountDuplicates;
             _recountTimer.AutoReset = true;
@@ -94,9 +95,12 @@ namespace UdpSelfCounter
         {
             try
             {
-                _currentClients.Clear();
-                _currentClients.Add(NetIO.FindLocalIpAddress());
-                _sendClient.Send(ProgramData.EntryMessage);
+                lock (_locker)
+                {
+                    _currentClients.Clear();
+                    _currentClients.Add(NetIO.FindLocalIpAddressOrNull());
+                    _sendClient.Send(ProgramData.EntryMessage);
+                }
             }
             catch (Exception)
             {
