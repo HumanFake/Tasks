@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net;
+using System.Timers;
 using JetBrains.Annotations;
 using NetUtils;
 
@@ -9,7 +10,10 @@ namespace TcpListener
     internal class Server : Disposable
     {
         private const int BufferSize = 1024;
+        private const int Time = 500;
+
         private readonly System.Net.Sockets.TcpListener _server;
+        private readonly Timer _timer = new Timer(Time);
 
         internal Server(int port, [NotNull] IPAddress address)
         {
@@ -18,6 +22,7 @@ namespace TcpListener
                 throw new ArgumentNullException(nameof(address));
             }
             _server = new System.Net.Sockets.TcpListener(address, port);
+            _timer.Enabled = true;
         }
 
         internal void Listen()
@@ -34,12 +39,19 @@ namespace TcpListener
                     {
                         Console.WriteLine("Подключен клиент. Выполнение запроса...");
 
+                        long momentByteCount = 0;
                         var stream = client.GetStream();
 
                         var time = Stopwatch.StartNew();
 
                         long byteCount = 0;
                         var buffer = new byte[BufferSize];
+                        _timer.Elapsed += (sender, args) =>
+                        {
+                            Console.Out.WriteLine($"{momentByteCount.BytesToMegaBytes() * 2}");
+                            momentByteCount = 0;
+                        };
+                        _timer.Start();
 
                         while (true)
                         {
@@ -49,9 +61,11 @@ namespace TcpListener
                                 break;
                             }
                             byteCount += readedBytes;
+                            momentByteCount += readedBytes;
                         }
 
                         DisplayResult(byteCount, time.ElapsedMilliseconds);
+                        _timer.Stop();
                     }
                 }
             }
