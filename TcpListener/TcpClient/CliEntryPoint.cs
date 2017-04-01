@@ -9,14 +9,13 @@ namespace TcpClient
     {
         private static void Main()
         {
-            var port = NetIO.ReadPort();
+            var port = Port.ReadPort();
             var ipAddress = NetIO.ReadAddress();
 
             var ipEndPoint = new IPEndPoint(ipAddress, port.GetPort);
 
             Console.WriteLine("Введите имя файла:");
             var fileName = Console.ReadLine();
-
             try
             {
                 using (var stream = new FileStream(fileName, FileMode.Open))

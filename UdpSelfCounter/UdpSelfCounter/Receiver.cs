@@ -65,12 +65,14 @@ namespace UdpSelfCounter
                     IPEndPoint remoteIpEndPoint = null;
                     var receiveBytes = _receiveClient.Receive(ref remoteIpEndPoint);
                     var message = new ReceiveMessage(receiveBytes, remoteIpEndPoint);
-
-                    var currentCopyCount = _currentClients.Count;
-                    AnalyzeMessage(message);
-                    if (currentCopyCount != _currentClients.Count)
+                    lock (_locker)
                     {
-                        DisplayCopyCount(_currentClients.Count);
+                        var currentCopyCount = _currentClients.Count;
+                        AnalyzeMessage(message);
+                        if (currentCopyCount != _currentClients.Count)
+                        {
+                            DisplayCopyCount(_currentClients.Count);
+                        }
                     }
                 }
             }
@@ -99,8 +101,8 @@ namespace UdpSelfCounter
                 {
                     _currentClients.Clear();
                     _currentClients.Add(NetIO.FindLocalIpAddressOrNull());
-                    _sendClient.Send(ProgramData.EntryMessage);
                 }
+                _sendClient.Send(ProgramData.EntryMessage);
             }
             catch (Exception)
             {
@@ -120,9 +122,9 @@ namespace UdpSelfCounter
             {
                 throw new ArgumentNullException(nameof(message));
             }
-            #if DEBUG
+#if DEBUG
             Console.WriteLine($"New message {message.Body} from {message.Address}");
-            #endif
+#endif
             if (ProgramData.AnswerMessage == message.Body)
             {
                 if (false == _currentClients.Contains(message.Address))

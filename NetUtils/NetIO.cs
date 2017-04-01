@@ -36,6 +36,23 @@ namespace NetUtils
             return address;
         }
 
+        public static void ConsoleWrite(int line, [NotNull] string text)
+        {
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+            var currentLeftCursorPosition = Console.CursorLeft;
+            var currentTopCursorPosition = Console.CursorTop;
+
+            Console.SetCursorPosition(0, line);
+            Console.Write(" ", 0, Console.WindowWidth);
+            Console.SetCursorPosition(0, line);
+            Console.Write(text);
+
+            Console.SetCursorPosition(currentLeftCursorPosition, currentTopCursorPosition);
+        }
+
         [CanBeNull]
         public static IPAddress FindLocalIpAddressOrNull()
         {

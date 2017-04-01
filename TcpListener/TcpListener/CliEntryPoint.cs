@@ -11,22 +11,25 @@ namespace TcpListener
         [DllImport("Kernel32", EntryPoint = "SetConsoleCtrlHandler")]
         private static extern bool SetSignalHandler(SignalHandler handler, bool addHandler);
 
-        private static SignalHandler _signalHandler;
-
         private static void Main()
         {
-            var port = NetIO.ReadPort();
-            var address = NetIO.FindLocalIpAddress();
+            var port = Port.ReadPort();
+            var address = NetIO.FindLocalIpAddressOrNull();
 
             try
             {
+                if (address == null)
+                {
+                    throw new ArgumentException("локальный IP не найден");
+                }
+                Console.Clear();
                 var server = new Server(port.GetPort, address);
 
-                _signalHandler += unused =>
+                SignalHandler signalHandler = unused =>
                 {
                     server.StopListen();
                 };
-                SetSignalHandler(_signalHandler, true);
+                SetSignalHandler(signalHandler, true);
 
                 server.Listen();
             }
