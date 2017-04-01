@@ -13,6 +13,7 @@ namespace NetUtils
         private const double BytesInMegaBytes = 1024.0;
         private const double MillisecondsInSecond = 1000.0;
 
+        [UsedImplicitly]
         public static IPAddress ReadAddress()
         {
             IPAddress address;
@@ -37,6 +38,7 @@ namespace NetUtils
             return address;
         }
 
+        [UsedImplicitly]
         public static void ConsoleWrite(int line, [NotNull] string text)
         {
             if (text == null)
@@ -61,11 +63,13 @@ namespace NetUtils
             return host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
         }
 
+        [UsedImplicitly]
         public static double BytesToMegaBytes(this long sourse)
         {
             return sourse / BytesInMegaBytes / BytesInMegaBytes;
         }
 
+        [UsedImplicitly]
         public static double MillisecondToSecond(this long sourse)
         {
             return sourse / MillisecondsInSecond;
