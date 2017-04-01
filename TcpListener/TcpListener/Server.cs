@@ -10,29 +10,44 @@ namespace TcpListener
     internal class Server
     {
         private const int BufferSize = 1024;
-        private const long TimerRestartTime = 500;
+        private const long TimerDelay = 500;
         
         private readonly System.Net.Sockets.TcpListener _server;
-        private readonly Timer _timer = new Timer(TimerRestartTime);
+        private readonly Timer _speedometer = new Timer(TimerDelay);
 
-        private long _totalRecivedBytesCount;
-        private long _lastDisplayedRecivedBytesCount;
+        private long _totalReceivedBytesCount;
+        private long _lastDisplayedReceivedBytesCount;
         
-        internal Server(int port, [NotNull] IPAddress address)
+        internal Server([NotNull] Port port, [NotNull] IPAddress address)
         {
+            if (port == null)
+            {
+                throw new ArgumentNullException(nameof(port));
+            }
             if (address == null)
             {
                 throw new ArgumentNullException(nameof(address));
             }
             try
             {
-                _server = new System.Net.Sockets.TcpListener(address, port);
+                _server = new System.Net.Sockets.TcpListener(address, port.GetPort);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw new ServerException(e);
+                Console.WriteLine($"Не удалось запустить приложение под портом: {port.GetPort}");
+                try
+                {
+                    _server = new System.Net.Sockets.TcpListener(address, 0);
+                    var ipEndPoint = _server.LocalEndpoint as IPEndPoint;
+                    var currentPort = ipEndPoint?.Port;
+                    Console.WriteLine($"Автоматически выбран порт: {currentPort}");
+                }
+                catch (Exception ex)
+                {
+                    throw new ServerException(ex);
+                }
             }
-            _timer.Elapsed += DisplayCurrentSpeed;
+            _speedometer.Elapsed += DisplayCurrentSpeed;
         }
 
         internal void Listen()
@@ -46,27 +61,30 @@ namespace TcpListener
                     Console.WriteLine("Ожидание подключений... ");
                     using (var client = _server.AcceptTcpClient())
                     {
-                        _totalRecivedBytesCount = 0;
-                        _lastDisplayedRecivedBytesCount = 0;
-                        _timer.Start();
+                        _totalReceivedBytesCount = 0;
+                        _lastDisplayedReceivedBytesCount = 0;
+                        _speedometer.Start();
                         try
                         {
                             var clientIpEndPoint = client.Client.LocalEndPoint as IPEndPoint;
                             Console.WriteLine($"Подключен клиент {clientIpEndPoint?.Address}. Выполнение запроса...");
-                            var stream = client.GetStream();
-                            var buffer = new byte[BufferSize];
 
                             var time = Stopwatch.StartNew();
-                            while (true)
+                            using (var stream = client.GetStream())
                             {
-                                var readedBytes = stream.Read(buffer, 0, buffer.Length);
-                                if (readedBytes == 0)
+                                var buffer = new byte[BufferSize];
+                                
+                                while (true)
                                 {
-                                    break;
+                                    var readedBytes = stream.Read(buffer, 0, buffer.Length);
+                                    if (readedBytes == 0)
+                                    {
+                                        break;
+                                    }
+                                    _totalReceivedBytesCount += readedBytes;
                                 }
-                                _totalRecivedBytesCount += readedBytes;
                             }
-                            DisplayResult(_totalRecivedBytesCount, time.ElapsedMilliseconds);
+                            DisplayResult(_totalReceivedBytesCount, time.ElapsedMilliseconds);
                         }
                         catch (Exception)
                         {
@@ -74,7 +92,7 @@ namespace TcpListener
                         }
                         finally
                         {
-                            _timer.Stop();
+                            _speedometer.Stop();
                         }
                     }
                 }
@@ -85,7 +103,7 @@ namespace TcpListener
             }
             finally
             {
-                _timer?.Close();
+                _speedometer?.Close();
                 _server?.Stop();
             }
         }
@@ -95,23 +113,26 @@ namespace TcpListener
             _server.Stop();
         }
 
-        private void DisplayCurrentSpeed(object source, ElapsedEventArgs e)
+        private void DisplayCurrentSpeed([NotNull] object source, [NotNull] ElapsedEventArgs e)
         {
             var cursorPosition = Console.CursorTop;
-            var recivedBytes = _totalRecivedBytesCount - _lastDisplayedRecivedBytesCount;
-            _lastDisplayedRecivedBytesCount = _lastDisplayedRecivedBytesCount + recivedBytes;
+            var receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
+            _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
 
-            var averedgeSpeed = recivedBytes.BytesToMegaBytes() / TimerRestartTime.MillisecondToSecond();
+            var averedgeSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
             NetIO.ConsoleWrite(cursorPosition, "Текущая скорость: " + averedgeSpeed.ToString("F") + "МБ/с");
         }
 
         private static void DisplayResult(long byteCount, long milliseconds)
         {
+            var cursorPosition = Console.CursorTop;
+            NetIO.ConsoleWrite(cursorPosition, "                                                               ");
+
             Console.WriteLine($"Байт принято: {byteCount}");
-            Console.WriteLine($"Общее время: {milliseconds.MillisecondToSecond().ToString("F")}c");
+            Console.WriteLine($"Общее время: {milliseconds.MillisecondToSecond():F} c");
             Console.WriteLine(milliseconds <= 0
                 ? "Данные пряняты быстрее чем за 1ну миллисекунду."
-                : $"Средняя скорость: {(byteCount.BytesToMegaBytes() / milliseconds.MillisecondToSecond()).ToString("F")} MB/c");
+                : $"Средняя скорость: {(byteCount.BytesToMegaBytes() / milliseconds.MillisecondToSecond()):F} MB/c");
             Console.WriteLine();
         }
     }

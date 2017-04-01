@@ -19,11 +19,15 @@ namespace UdpSelfCounter
         private readonly List<IPAddress> _currentClients = new List<IPAddress>();
         private readonly Timer _recountTimer = new Timer(RecountTime);
 
-        internal Receiver([NotNull] Sender sender, Port port)
+        internal Receiver([NotNull] Sender sender, [NotNull] Port port)
         {
             if (sender == null)
             {
                 throw new ArgumentNullException(nameof(sender));
+            }
+            if (port == null)
+            {
+                throw new ArgumentNullException(nameof(port));
             }
 
             _currentClients.Add(NetIO.FindLocalIpAddressOrNull());
@@ -93,7 +97,7 @@ namespace UdpSelfCounter
             _receiveClient?.Close();
         }
 
-        private void RecountDuplicates(object unused, ElapsedEventArgs elapsedEventArgs)
+        private void RecountDuplicates([NotNull] object unused, [NotNull] ElapsedEventArgs elapsedEventArgs)
         {
             try
             {

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using JetBrains.Annotations;
+// ReSharper disable InconsistentNaming
 
 namespace NetUtils
 {
@@ -10,7 +11,7 @@ namespace NetUtils
     {
         private const string InvalidIp = "Недопустимый IP.";
         private const double BytesInMegaBytes = 1024.0;
-        private const double MilliseconsInSecond = 1000.0;
+        private const double MillisecondsInSecond = 1000.0;
 
         public static IPAddress ReadAddress()
         {
@@ -67,7 +68,7 @@ namespace NetUtils
 
         public static double MillisecondToSecond(this long sourse)
         {
-            return sourse / MilliseconsInSecond;
+            return sourse / MillisecondsInSecond;
         }
     }
 }

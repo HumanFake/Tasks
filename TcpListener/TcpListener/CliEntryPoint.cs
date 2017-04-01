@@ -23,7 +23,7 @@ namespace TcpListener
                     throw new ArgumentException("локальный IP не найден");
                 }
                 Console.Clear();
-                var server = new Server(port.GetPort, address);
+                var server = new Server(port, address);
 
                 SignalHandler signalHandler = unused =>
                 {

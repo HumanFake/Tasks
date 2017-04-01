@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Net;
-using System.Net.Sockets;
 using System.Threading;
 using JetBrains.Annotations;
 using NetUtils;
 
 namespace TcpListener
 {
-    internal class Server : Disposable
+    internal class Server
     {
-        private const int BufferSize = 1024 * 1024;
         private readonly System.Net.Sockets.TcpListener _server;
 
-        internal Server(Port port, [NotNull] IPAddress address)
+        internal Server([NotNull] Port port, [NotNull] IPAddress address)
         {
+            if (port == null)
+            {
+                throw new ArgumentNullException(nameof(port));
+            }
             if (address == null)
             {
                 throw new ArgumentNullException(nameof(address));
@@ -59,7 +61,7 @@ namespace TcpListener
             }
             finally
             {
-                Dispose();
+                _server?.Stop();
             }
         }
 
@@ -76,7 +78,7 @@ namespace TcpListener
             }
         }
         
-        private static void GetResponse(ResponseClient responseClient)
+        private static void GetResponse([NotNull] ResponseClient responseClient)
         {
             try
             {
@@ -88,54 +90,6 @@ namespace TcpListener
             catch (Exception)
             {
                 Console.WriteLine("Ошибка во время получения данных");
-            }
-        }
-
-        protected override void FreeManagedResources()
-        {
-            _server?.Stop();
-        }
-
-        private class ResponseClient : Disposable
-        {
-            private readonly TcpClient _tcpClient;
-
-            internal ResponseClient(TcpClient tcpClient)
-            {
-                _tcpClient = tcpClient;
-            }
-
-            internal void ResponceMessage()
-            {
-                long byteCount;
-                var ipEndPoint = (IPEndPoint) _tcpClient.Client.LocalEndPoint;
-                using (var networkStream = _tcpClient.GetStream())
-                {
-                    Console.WriteLine($"Подключен клиент {ipEndPoint.Address}.\nВыполнение запроса...");
-
-                    byteCount = 0;
-                    var buffer = new byte[BufferSize];
-                    while (true)
-                    {
-                        var readedBytes = networkStream.Read(buffer, 0, buffer.Length);
-                        if (readedBytes == 0)
-                        {
-                            break;
-                        }
-                        byteCount += readedBytes;
-                    }
-                }
-                Console.WriteLine($"Приём данных с {ipEndPoint.Address} завершён. Получено {byteCount} байт.");
-            }
-
-            void ClearLine(int line)
-            {
-                Console.MoveBufferArea(0, line, Console.BufferWidth, 1, Console.BufferWidth, line, ' ', Console.ForegroundColor, Console.BackgroundColor);
-            }
-
-            protected override void FreeManagedResources()
-            {
-                _tcpClient?.Close();
             }
         }
     }
