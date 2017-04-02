@@ -16,6 +16,7 @@ namespace TcpListener
         private readonly TcpClient _tcpClient;
         private readonly Timer _speedometer = new Timer(TimerDelay);
         private readonly int _cursorPosition;
+        private readonly object _outputLocker = new object(); 
 
         private long _totalReceivedBytesCount;
         private long _lastDisplayedReceivedBytesCount;
@@ -39,7 +40,7 @@ namespace TcpListener
             try
             {
                 var clientIpEndPoint = _tcpClient.Client.LocalEndPoint as IPEndPoint;
-                Console.WriteLine($"Подключен клиент {clientIpEndPoint?.Address}. Выполнение запроса...");
+                Console.WriteLine($"{clientIpEndPoint?.Address} connect. Data receiving...");
 
                 var time = Stopwatch.StartNew();
                 using (var stream = _tcpClient.GetStream())
@@ -66,24 +67,30 @@ namespace TcpListener
 
         private void DisplayCurrentSpeed([NotNull] object source, [NotNull]  ElapsedEventArgs e)
         {
-            var receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
-            _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
+            lock (_outputLocker)
+            {
+                var receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
+                _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
 
-            var averedgeSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
-            NetIO.ConsoleWrite(_cursorPosition, "Текущая скорость: " + averedgeSpeed.ToString("F") + "МБ/с");
+                var averedgeSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
+                NetIO.ConsoleWrite(_cursorPosition, "Current speed: " + averedgeSpeed.ToString("F") + "MB/s");
+            }
         }
 
         private void DisplayResult(long byteCount, long milliseconds, [CanBeNull] string clientIp)
         {
-            NetIO.ConsoleWrite(_cursorPosition, "                                                               ");
-
-            Console.WriteLine($"Завершено получение данных с: {clientIp}");
-            Console.WriteLine($"Байт принято: {byteCount}");
-            Console.WriteLine($"Общее время: {milliseconds.MillisecondToSecond():F} c");
-            Console.WriteLine(milliseconds <= 0
-                ? "Данные пряняты быстрее чем за 1ну миллисекунду."
-                : $"Средняя скорость: {(byteCount.BytesToMegaBytes() / milliseconds.MillisecondToSecond()):F} MB/c");
-            Console.WriteLine();
+            lock (_outputLocker)
+            {
+                NetIO.ConsoleWrite(_cursorPosition, "                                                               ");
+                Console.WriteLine();
+                Console.WriteLine($"Data receiving complete from: {clientIp}");
+                Console.WriteLine($"Total bytes: {byteCount}");
+                Console.WriteLine($"Total time: {milliseconds.MillisecondToSecond():F} c");
+                Console.WriteLine(milliseconds <= 0
+                    ? "Receive faster when one second."
+                    : $"Average speed: {(byteCount.BytesToMegaBytes() / milliseconds.MillisecondToSecond()):F} MB/s");
+                Console.WriteLine();
+            }
         }
 
         protected override void FreeManagedResources()

@@ -26,12 +26,12 @@ namespace TcpListener
             }
             catch (Exception)
             {
-                Console.WriteLine($"Не удаётся запустить сервер с протом: {port.GetPort}");
+                Console.WriteLine($"Can't star at: {port.GetPort} port");
                 try
                 {
                     _server = new System.Net.Sockets.TcpListener(address, 0);
                     var ipEndPoint = _server.Server.LocalEndPoint as IPEndPoint;
-                    Console.WriteLine($"Порт выбран автоматически: {ipEndPoint?.Port}");
+                    Console.WriteLine($"Automatically chousen port: {ipEndPoint?.Port}");
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ namespace TcpListener
                 _server.Start();
                 while (true)
                 {
-                    Console.WriteLine("Ожидание подключений... ");
+                    Console.WriteLine("Connection waiting... ");
                     var tcpClient = _server.AcceptTcpClient();
                     var responseClient = new ResponseClient(tcpClient);
 
@@ -89,7 +89,7 @@ namespace TcpListener
             }
             catch (Exception)
             {
-                Console.WriteLine("Ошибка во время получения данных");
+                Console.WriteLine("Error data recive.");
             }
         }
     }

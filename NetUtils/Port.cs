@@ -4,7 +4,7 @@ namespace NetUtils
 {
     public sealed class Port
     {
-        private const string InvalidPort = "Недопустимое значение порта.";
+        private const string InvalidPort = "Invalid port.";
         private const int MaximumPort = 65535;
         private const int MinimumPort = 1024;
 
@@ -20,7 +20,7 @@ namespace NetUtils
             int port;
             while (true)
             {
-                Console.Write("Введите порт: ");
+                Console.Write("Enter port: ");
                 var input = Console.ReadLine();
                 if (input != null && int.TryParse(input, out port))
                 {

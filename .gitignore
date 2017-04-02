@@ -55,6 +55,8 @@ TcpListener/TcpClient/bin/*
 TcpListener/TcpClient/obj/*
 TcpMultiFiles/TcpClient/bin/*
 TcpMultiFiles/TcpClient/obj/*
+TcpMultiFiles/TcpListener/bin/*
+TcpMultiFiles/TcpListener/obj/*
 TcpListener/TcpServer/bin/*
 TcpListener/TcpServer/obj/*
 TcpListener/TcpListener/obj/*

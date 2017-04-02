@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Xml.Serialization;
 using JetBrains.Annotations;
 // ReSharper disable InconsistentNaming
 
@@ -9,7 +10,7 @@ namespace NetUtils
 {
     public static class NetIO
     {
-        private const string InvalidIp = "Недопустимый IP.";
+        private const string InvalidIp = "Invalid IP.";
         private const double BytesInMegaBytes = 1024.0;
         private const double MillisecondsInSecond = 1000.0;
 
@@ -19,7 +20,7 @@ namespace NetUtils
             IPAddress address;
             while (true)
             {
-                Console.Write("Введите IP: ");
+                Console.Write("Enter IP: ");
                 try
                 {
                     var input = Console.ReadLine();
@@ -48,12 +49,33 @@ namespace NetUtils
             var currentLeftCursorPosition = Console.CursorLeft;
             var currentTopCursorPosition = Console.CursorTop;
 
+            Write(line, text);
+
+            Console.SetCursorPosition(currentLeftCursorPosition, currentTopCursorPosition);
+        }
+
+        [UsedImplicitly]
+        public static void ConsoleWriteLine(int line, [NotNull] string text)
+        {
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+            var currentLeftCursorPosition = Console.CursorLeft;
+            var currentTopCursorPosition = Console.CursorTop;
+
+            Write(line, text);
+            Console.WriteLine();
+
+            Console.SetCursorPosition(currentLeftCursorPosition, currentTopCursorPosition);
+        }
+
+        private static void Write(int line, [NotNull] string text)
+        {
             Console.SetCursorPosition(0, line);
             Console.Write(" ", 0, Console.WindowWidth);
             Console.SetCursorPosition(0, line);
             Console.Write(text);
-
-            Console.SetCursorPosition(currentLeftCursorPosition, currentTopCursorPosition);
         }
 
         [CanBeNull]

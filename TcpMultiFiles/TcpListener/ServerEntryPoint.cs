@@ -20,7 +20,7 @@ namespace TcpListener
             {
                 if (address == null)
                 {
-                    throw new ArgumentException("локальный IP не найден");
+                    throw new ArgumentException("Can't get local IP");
                 }
                 Console.Clear();
                 var server = new Server(port, address);

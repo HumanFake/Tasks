@@ -1,1 +1,0 @@
-C:\Users\Fairan\OneDrive\C#\TcpMultiFiles\TcpMultiFiles\bin\Debug\TcpMultiFiles.exe.config

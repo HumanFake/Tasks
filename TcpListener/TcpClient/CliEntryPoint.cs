@@ -14,7 +14,7 @@ namespace TcpClient
 
             var ipEndPoint = new IPEndPoint(ipAddress, port.GetPort);
 
-            Console.WriteLine("Введите имя файла:");
+            Console.WriteLine("Enter file name:");
             var fileName = Console.ReadLine();
             try
             {
@@ -23,7 +23,7 @@ namespace TcpClient
                     using (var client = new Client(ipEndPoint))
                     {
                         client.Send(stream);
-                        Console.WriteLine("Отправка данных завершена...");
+                        Console.WriteLine("Data sending complete...");
                     }
                 }
             }
