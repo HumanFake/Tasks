@@ -38,13 +38,13 @@ namespace UdpSelfCounter
             }
             catch (Exception)
             {
-                Console.WriteLine($"Не удалось запустить приложение под портом: {port.GetPort}");
+                Console.WriteLine($"Can't star at {port.GetPort} port");
                 try
                 {
                     _receiveClient = new UdpClient(0);
                     var ipEndPoint = _receiveClient.Client.LocalEndPoint as IPEndPoint;
                     var currentPort = ipEndPoint?.Port;
-                    Console.WriteLine($"Автоматически выбран порт: {currentPort}");
+                    Console.WriteLine($"Automatically chousen port: {currentPort}");
                 }
                 catch (Exception ex)
                 {
@@ -126,9 +126,9 @@ namespace UdpSelfCounter
             {
                 throw new ArgumentNullException(nameof(message));
             }
-#if DEBUG
+            #if DEBUG
             Console.WriteLine($"New message {message.Body} from {message.Address}");
-#endif
+            #endif
             if (ProgramData.AnswerMessage == message.Body)
             {
                 if (false == _currentClients.Contains(message.Address))
