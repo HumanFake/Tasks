@@ -41,7 +41,7 @@ namespace TcpListener
             {
                 var clientIpEndPoint = _tcpClient.Client.LocalEndPoint as IPEndPoint;
                 Console.WriteLine($"{clientIpEndPoint?.Address} connect. Data receiving...");
-
+                Console.WriteLine();
                 var time = Stopwatch.StartNew();
                 using (var stream = _tcpClient.GetStream())
                 {
@@ -85,7 +85,7 @@ namespace TcpListener
                 Console.WriteLine();
                 Console.WriteLine($"Data receiving complete from: {clientIp}");
                 Console.WriteLine($"Total bytes: {byteCount}");
-                Console.WriteLine($"Total time: {milliseconds.MillisecondToSecond():F} c");
+                Console.WriteLine($"Total time: {milliseconds.MillisecondToSecond():F} s");
                 Console.WriteLine(milliseconds <= 0
                     ? "Receive faster when one second."
                     : $"Average speed: {(byteCount.BytesToMegaBytes() / milliseconds.MillisecondToSecond()):F} MB/s");
