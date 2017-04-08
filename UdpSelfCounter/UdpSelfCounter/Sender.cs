@@ -5,7 +5,7 @@ using NetUtils;
 
 namespace UdpSelfCounter
 {
-    internal class Sender : Disposable
+    internal sealed class Sender : Disposable
     {
         private readonly UdpClient _sender;
         private readonly IPEndPoint _endPoint;

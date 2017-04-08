@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace UdpSelfCounter
 {
-    internal class ReceiveMessage
+    internal sealed class ReceiveMessage
     {
         internal ReceiveMessage([NotNull] byte[] message, [NotNull] IPEndPoint endPoint)
         {

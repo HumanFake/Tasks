@@ -67,8 +67,11 @@ TcpMultiFiles/TcpServer/obj/*
 UdpSelfCounter/UdpSelfCounter/obj/Debug/*
 UdpSelfCounter/UdpSelfCounter/obj/Release/*
 UdpSelfCounter/UdpSelfCounter/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
+UdpPlus/UdpPlus/bin/*
+UdpPlus/UdpPlus/obj/*
 *.cache
 TcpListener/NetUtils/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
 TcpListener/.vs/TcpListener/v15/.suo
 TcpListener/.vs/TcpListener/v14/.suo
 TcpListener/.vs/TcpListener/v14/.suo
+UdpPlus/.vs/UdpPlus/v14/.suo

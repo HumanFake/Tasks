@@ -9,7 +9,7 @@ using Timer = System.Timers.Timer;
 
 namespace UdpSelfCounter
 {
-    internal class Receiver
+    internal sealed class Receiver
     {
         private const int RecountTime = 2000;
 
@@ -62,8 +62,10 @@ namespace UdpSelfCounter
             try
             {
                 _recountTimer.Start();
-
-                DisplayCopyCount(_currentClients.Count);
+                lock (_locker)
+                {
+                    DisplayCopyCount(_currentClients.Count);
+                }
                 while (true)
                 {
                     IPEndPoint remoteIpEndPoint = null;
