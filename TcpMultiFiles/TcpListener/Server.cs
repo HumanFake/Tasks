@@ -6,7 +6,7 @@ using NetUtils;
 
 namespace TcpListener
 {
-    internal class Server
+    internal sealed class Server
     {
         private readonly System.Net.Sockets.TcpListener _server;
 
@@ -49,7 +49,7 @@ namespace TcpListener
                 {
                     Console.WriteLine("Connection waiting... ");
                     var tcpClient = _server.AcceptTcpClient();
-                    var responseClient = new ResponseClient(tcpClient);
+                    var responseClient = new Receiver(tcpClient);
 
                     var clientThread = new Thread(() => GetResponse(responseClient));
                     clientThread.Start();
@@ -78,13 +78,13 @@ namespace TcpListener
             }
         }
         
-        private static void GetResponse([NotNull] ResponseClient responseClient)
+        private static void GetResponse([NotNull] Receiver receiver)
         {
             try
             {
-                using (responseClient)
+                using (receiver)
                 {
-                    responseClient.ResponceMessage();
+                    receiver.ReceivedMessage();
                 }
             }
             catch (Exception)

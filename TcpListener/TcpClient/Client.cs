@@ -8,7 +8,7 @@ using net = System.Net.Sockets;
 
 namespace TcpClient
 {
-    internal class Client : Disposable
+    internal sealed class Client : Disposable
     {
         private readonly net.TcpClient _client;
         private readonly net.NetworkStream _stream;

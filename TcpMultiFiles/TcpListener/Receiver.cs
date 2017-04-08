@@ -8,7 +8,7 @@ using NetUtils;
 
 namespace TcpListener
 {
-    internal class ResponseClient : Disposable
+    internal sealed class Receiver : Disposable
     {
         private const int BufferSize = 1024 * 1024;
         private const long TimerDelay = 500;
@@ -21,7 +21,7 @@ namespace TcpListener
         private long _totalReceivedBytesCount;
         private long _lastDisplayedReceivedBytesCount;
 
-        internal ResponseClient([NotNull] TcpClient tcpClient)
+        internal Receiver([NotNull] TcpClient tcpClient)
         {
             if (tcpClient == null)
             {
@@ -32,7 +32,7 @@ namespace TcpListener
             _speedometer.Elapsed += DisplayCurrentSpeed;
         }
 
-        internal void ResponceMessage()
+        internal void ReceivedMessage()
         {
             _totalReceivedBytesCount = 0;
             _lastDisplayedReceivedBytesCount = 0;
@@ -95,6 +95,7 @@ namespace TcpListener
 
         protected override void FreeManagedResources()
         {
+            _speedometer?.Close();
             _tcpClient?.Close();
         }
     }
