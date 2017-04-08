@@ -95,6 +95,7 @@ namespace UdpSelfCounter
 
         internal void StopListen()
         {
+            _recountTimer?.Stop();
             _sendClient?.Send(ProgramData.OutMessage);
             _receiveClient?.Close();
         }
