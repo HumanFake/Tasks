@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Xml.Serialization;
 using JetBrains.Annotations;
@@ -83,6 +84,25 @@ namespace NetUtils
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
             return host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+        }
+
+        [CanBeNull]
+        public static IPAddress FindLocalIpAddressOrNull(NetworkInterfaceType _type)
+        {
+            foreach (var item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == _type && item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (var ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            return ip.Address;
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         [UsedImplicitly]

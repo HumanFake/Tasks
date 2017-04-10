@@ -12,7 +12,7 @@ namespace TcpClient
             var port = Port.ReadPort();
             var ipAddress = NetIO.ReadAddress();
 
-            var ipEndPoint = new IPEndPoint(ipAddress, port.GetPort);
+            var ipEndPoint = new IPEndPoint(ipAddress, port.AtInt);
 
             Console.WriteLine("Enter file name:");
             var fileName = Console.ReadLine();

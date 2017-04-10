@@ -16,7 +16,7 @@ namespace TcpListener
         private readonly TcpClient _tcpClient;
         private readonly Timer _speedometer = new Timer(TimerDelay);
         private readonly int _cursorPosition;
-        private readonly object _outputLocker = new object(); 
+        private readonly object _locker = new object();
 
         private long _totalReceivedBytesCount;
         private long _lastDisplayedReceivedBytesCount;
@@ -32,10 +32,8 @@ namespace TcpListener
             _speedometer.Elapsed += DisplayCurrentSpeed;
         }
 
-        internal void ReceivedMessage()
+        internal void ReceiveData()
         {
-            _totalReceivedBytesCount = 0;
-            _lastDisplayedReceivedBytesCount = 0;
             _speedometer.Start();
             try
             {
@@ -54,7 +52,10 @@ namespace TcpListener
                         {
                             break;
                         }
-                        _totalReceivedBytesCount += readedBytes;
+                        lock (_locker)
+                        {
+                            _totalReceivedBytesCount += readedBytes;
+                        }
                     }
                 }
                 DisplayResult(_totalReceivedBytesCount, time.ElapsedMilliseconds, clientIpEndPoint?.Address.ToString());
@@ -67,7 +68,7 @@ namespace TcpListener
 
         private void DisplayCurrentSpeed([NotNull] object source, [NotNull]  ElapsedEventArgs e)
         {
-            lock (_outputLocker)
+            lock (_locker)
             {
                 var receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
                 _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
@@ -79,7 +80,7 @@ namespace TcpListener
 
         private void DisplayResult(long byteCount, long milliseconds, [CanBeNull] string clientIp)
         {
-            lock (_outputLocker)
+            lock (_locker)
             {
                 NetIO.ConsoleWrite(_cursorPosition, "                                                               ");
                 Console.WriteLine();

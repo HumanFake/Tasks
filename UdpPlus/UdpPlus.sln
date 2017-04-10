@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UdpPlus", "UdpPlus\UdpPlus.csproj", "{3E0856AD-ACC4-470E-A0EA-08A9FAFFB4F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tudp", "UdpPlus\Tudp.csproj", "{3E0856AD-ACC4-470E-A0EA-08A9FAFFB4F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUtils", "..\NetUtils\NetUtils.csproj", "{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TudpClient", "TudpClient\TudpClient.csproj", "{3351A8AF-86BB-4702-8565-CAF7CE96BC83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3351A8AF-86BB-4702-8565-CAF7CE96BC83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3351A8AF-86BB-4702-8565-CAF7CE96BC83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3351A8AF-86BB-4702-8565-CAF7CE96BC83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3351A8AF-86BB-4702-8565-CAF7CE96BC83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

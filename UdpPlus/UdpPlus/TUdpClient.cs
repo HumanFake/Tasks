@@ -4,16 +4,17 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using NetUtils;
 
 namespace UdpPlus
 {
-    public class UdpPClient : Disposable
+    public sealed class TudpClient : Disposable
     {
         private readonly UdpClient _udpClient;
 
-        public UdpPClient([NotNull] Port port, [NotNull] IPAddress address)
+        public TudpClient([NotNull] Port port, [NotNull] IPAddress address)
         {
             if (port == null)
             {
@@ -32,28 +33,36 @@ namespace UdpPlus
             {
                 throw new ArgumentNullException(nameof(bytes));
             }
+            var receiver = new Receiver(_udpClient);
+            var task = new Task(receiver.Listen);
+            task.Start();
+
             var index = 1;
             var currentPosition = 0;
 
-            var identifer = BitConverter.GetBytes(index);
-            var buffer = new List<byte>();
-            buffer.AddRange(identifer);
-            for (int i = 0; i < UdpPUtils.MaxDaitagrammBytes; i++)
+            while (currentPosition != bytes.Length - 1)
             {
-                if (currentPosition == bytes.Length - 1)
+                var identifer = BitConverter.GetBytes(index);
+                var buffer = new List<byte>();
+                buffer.AddRange(identifer);
+                for (int i = 0; i < TudpUtils.MaxDaitagrammBytes; i++)
                 {
-                    break;
+                    if (currentPosition == bytes.Length - 1)
+                    {
+                        break;
+                    }
+                    buffer.Add(bytes[currentPosition]);
+                    currentPosition++;
                 }
-                buffer.Add(bytes[currentPosition]);
-                currentPosition++;
+                _udpClient.Send(buffer.ToArray(), buffer.Count);
+                receiver.NewMessege += udpPData =>
+                {
+                    if (udpPData.GetIdentifer().Equals(identifer))
+                    {
+                        index++;
+                    }
+                };
             }
-            _udpClient.Send(buffer.ToArray(), buffer.Count);
-
-            IPEndPoint remoteIpEndPoint = null;
-            var receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
-            var ud = new UdpPData(receiveBytes);
-            var receiveIdentifer = ud.GetIdentifer();
-
         }
 
         protected override void FreeManagedResources()
@@ -64,7 +73,7 @@ namespace UdpPlus
 
     internal class Receiver
     {
-        internal delegate void ReceiveHendler(byte[] bytes);
+        internal delegate void ReceiveHendler(TudpData bytes);
 
         internal event ReceiveHendler NewMessege;
 
@@ -81,9 +90,8 @@ namespace UdpPlus
             {
                 IPEndPoint remoteIpEndPoint = null;
                 var receiveBytes = _client.Receive(ref remoteIpEndPoint);
-                var ud = new UdpPData(receiveBytes);
-                var receiveIdentifer = ud.GetIdentifer();
-                NewMessege?.Invoke(receiveIdentifer);
+                var ud = new TudpData(receiveBytes);
+                NewMessege?.Invoke(ud);
             }
         }
     }
@@ -107,18 +115,22 @@ namespace UdpPlus
 
         public void Receive()
         {
-            byte[]  dategrammIdentifer = null;
+            byte[] dategrammIdentifer = null;
             var reciveData = new List<byte>();
             while (true)
             {
                 IPEndPoint remoteIpEndPoint = null;
                 var receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
-                var ud = new UdpPData(receiveBytes);
+                var ud = new TudpData(receiveBytes);
                 var reveivedategrammIdentifer = ud.GetIdentifer();
                 if (false == reveivedategrammIdentifer.Equals(dategrammIdentifer))
                 {
                     reciveData.AddRange(ud.GetDategramm());
                     dategrammIdentifer = reveivedategrammIdentifer;
+                }
+                if (reveivedategrammIdentifer.Equals(TudpData.LastMessege))
+                {
+                    break;
                 }
                 _udpClient.Send(reveivedategrammIdentifer, reveivedategrammIdentifer.Length, remoteIpEndPoint);
             }
@@ -127,37 +139,6 @@ namespace UdpPlus
         protected override void FreeManagedResources()
         {
             _udpClient?.Close();
-        }
-    }
-
-    internal class UdpPData
-    {
-        private readonly byte[] _identifer;
-        private readonly List<byte> _data = new List<byte>();
-
-        internal UdpPData([NotNull] byte[] dataWithIdentifer)
-        {
-            var identiferBytes = new byte[UdpPUtils.IdentiferByteCount];
-            for (int i = 0; i < identiferBytes.Length; i++)
-            {
-                identiferBytes[i] = dataWithIdentifer[i];
-            }
-            _identifer = identiferBytes;
-
-            for (int i = UdpPUtils.IdentiferByteCount; i < dataWithIdentifer.Length; i++)
-            {
-                _data.Add(dataWithIdentifer[i]);
-            }
-        }
-
-        internal byte[] GetDategramm()
-        {
-            return _data.ToArray();
-        }
-
-        internal byte[] GetIdentifer()
-        {
-            return _identifer;
         }
     }
 }

@@ -22,16 +22,16 @@ namespace TcpListener
             }
             try
             {
-                _server = new System.Net.Sockets.TcpListener(address, port.GetPort);
+                _server = new System.Net.Sockets.TcpListener(address, port.AtInt);
             }
             catch (Exception)
             {
-                Console.WriteLine($"Can't star at: {port.GetPort} port");
+                Console.WriteLine($"Can't star at: {port.AtInt} port");
                 try
                 {
                     _server = new System.Net.Sockets.TcpListener(address, 0);
                     var ipEndPoint = _server.Server.LocalEndPoint as IPEndPoint;
-                    Console.WriteLine($"Automatically chousen port: {ipEndPoint?.Port}");
+                    Console.WriteLine($"Automatically chosen port: {ipEndPoint?.Port}");
                 }
                 catch (Exception e)
                 {
@@ -84,7 +84,7 @@ namespace TcpListener
             {
                 using (receiver)
                 {
-                    receiver.ReceivedMessage();
+                    receiver.ReceiveData();
                 }
             }
             catch (Exception)

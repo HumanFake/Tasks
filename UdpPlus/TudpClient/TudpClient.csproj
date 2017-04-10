@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D1A1AC28-FC44-437B-9E5D-66AE4E01884F}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{3351A8AF-86BB-4702-8565-CAF7CE96BC83}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetUtils</RootNamespace>
-    <AssemblyName>NetUtils</AssemblyName>
+    <RootNamespace>TudpClient</RootNamespace>
+    <AssemblyName>TudpClient</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,10 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\UdpSelfCounter\packages\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,15 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Disposable.cs" />
-    <Compile Include="NetIO.cs" />
-    <Compile Include="Port.cs" />
+    <Compile Include="EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerException.cs" />
-    <Compile Include="TudpUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\NetUtils\NetUtils.csproj">
+      <Project>{d1a1ac28-fc44-437b-9e5d-66ae4e01884f}</Project>
+      <Name>NetUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UdpPlus\Tudp.csproj">
+      <Project>{3e0856ad-acc4-470e-a0ea-08a9faffb4f8}</Project>
+      <Name>Tudp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

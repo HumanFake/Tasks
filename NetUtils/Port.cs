@@ -10,10 +10,10 @@ namespace NetUtils
 
         private Port(int port)
         {
-            GetPort = port;
+            AtInt = port;
         }
 
-        public int GetPort { get; }
+        public int AtInt { get; }
 
         public static Port ReadPort()
         {
