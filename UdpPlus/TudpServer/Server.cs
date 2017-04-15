@@ -5,19 +5,19 @@ using System.Timers;
 using JetBrains.Annotations;
 using NetUtils;
 
-namespace TcpListener
+namespace TudpServer
 {
     internal class Server
     {
         private const int BufferSize = 1024;
         private const long TimerDelay = 500;
-        
+
         private readonly System.Net.Sockets.TcpListener _server;
         private readonly Timer _speedometer = new Timer(TimerDelay);
 
         private long _totalReceivedBytesCount;
         private long _lastDisplayedReceivedBytesCount;
-        
+
         internal Server([NotNull] Port port, [NotNull] IPAddress address)
         {
             if (port == null)
@@ -73,7 +73,7 @@ namespace TcpListener
                             using (var stream = client.GetStream())
                             {
                                 var buffer = new byte[BufferSize];
-                                
+
                                 while (true)
                                 {
                                     var readedBytes = stream.Read(buffer, 0, buffer.Length);

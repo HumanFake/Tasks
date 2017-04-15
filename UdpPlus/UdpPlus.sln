@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUtils", "..\NetUtils\Net
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TudpClient", "TudpClient\TudpClient.csproj", "{3351A8AF-86BB-4702-8565-CAF7CE96BC83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TudpServer", "TudpServer\TudpServer.csproj", "{3BE3EEE5-BB83-41B2-91F0-A6BE042EFC01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3351A8AF-86BB-4702-8565-CAF7CE96BC83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3351A8AF-86BB-4702-8565-CAF7CE96BC83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3351A8AF-86BB-4702-8565-CAF7CE96BC83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BE3EEE5-BB83-41B2-91F0-A6BE042EFC01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BE3EEE5-BB83-41B2-91F0-A6BE042EFC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BE3EEE5-BB83-41B2-91F0-A6BE042EFC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BE3EEE5-BB83-41B2-91F0-A6BE042EFC01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

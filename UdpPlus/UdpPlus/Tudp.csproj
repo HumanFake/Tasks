@@ -44,9 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Receiver.cs" />
     <Compile Include="TudpClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TudpData.cs" />
+    <Compile Include="UdpPListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NetUtils\NetUtils.csproj">
