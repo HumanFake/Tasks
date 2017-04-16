@@ -1,0 +1,12 @@
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\TudpServer.exe.config
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\TudpServer.exe
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\TudpServer.pdb
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\JetBrains.Annotations.dll
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\NetUtils.dll
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\UdpPlus.dll
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\NetUtils.pdb
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\UdpPlus.pdb
+N:\Tasks\UdpPlus\TudpServer\bin\Debug\JetBrains.Annotations.xml
+N:\Tasks\UdpPlus\TudpServer\obj\Debug\TudpServer.exe
+N:\Tasks\UdpPlus\TudpServer\obj\Debug\TudpServer.pdb
+N:\Tasks\UdpPlus\TudpServer\obj\Debug\TudpServer.csprojResolveAssemblyReference.cache

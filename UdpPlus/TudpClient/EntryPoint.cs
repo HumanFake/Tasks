@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using NetUtils;
 
 namespace TudpClient
@@ -34,6 +30,9 @@ namespace TudpClient
             catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
+                #if DEBUG
+                Console.Write(exception.Message);
+                #endif
             }
             Console.Read();
         }

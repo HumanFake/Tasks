@@ -48,7 +48,7 @@
     <Compile Include="TudpClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TudpData.cs" />
-    <Compile Include="UdpPListener.cs" />
+    <Compile Include="TudpListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NetUtils\NetUtils.csproj">

@@ -4,14 +4,11 @@ using System.Net;
 using JetBrains.Annotations;
 using NetUtils;
 
-using net = System.Net.Sockets;
 namespace TudpClient
 {
     internal sealed class Client : Disposable
     {
-        private readonly net.TcpClient _client;
-        private readonly UdpPlus.TudpClient _clientN;
-        private readonly net.NetworkStream _stream;
+        private readonly UdpPlus.TudpClient _client;
 
         internal Client([NotNull] IPEndPoint address)
         {
@@ -21,11 +18,7 @@ namespace TudpClient
             }
             try
             {
-                _client = new net.TcpClient();
-                _client.Connect(address);
-                _stream = _client.GetStream();
-
-                _clientN = new UdpPlus.TudpClient(address);
+                _client = new UdpPlus.TudpClient(address);
             }
             catch (Exception exception)
             {
@@ -33,7 +26,7 @@ namespace TudpClient
             }
         }
 
-        internal void Send([NotNull] Stream stream)
+        internal void Send([NotNull] FileStream stream)
         {
             if (stream == null)
             {
@@ -41,16 +34,7 @@ namespace TudpClient
             }
             try
             {
-                var buffer = new byte[1024*1024];
-                while (true)
-                {
-                    var data = stream.Read(buffer, 0, buffer.Length);
-                    if (data == 0)
-                    {
-                        break;
-                    }
-                    _clientN.Send(buffer);
-                }
+                _client.SendFile(stream);
             }
             catch (Exception exception)
             {
@@ -60,8 +44,7 @@ namespace TudpClient
 
         protected override void FreeManagedResources()
         {
-            _stream?.Close();
-            _client?.Close();
+            _client.Dispose();
         }
     }
 }

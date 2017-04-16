@@ -7,11 +7,11 @@ namespace UdpPlus
 {
     internal sealed class TudpData
     {
-        private const int LastMessegeIndetifer = -1;
-
         private readonly byte[] _identifer;
         private readonly List<byte> _data = new List<byte>();
-        internal readonly static TudpData LastMessege = new TudpData(BitConverter.GetBytes(LastMessegeIndetifer));
+
+        internal const int LastMessegeIndetifer = -1;
+        internal readonly static byte[] LastMessege = BitConverter.GetBytes(LastMessegeIndetifer);
 
         internal TudpData([NotNull] byte[] dataWithIdentifer)
         {
@@ -22,7 +22,7 @@ namespace UdpPlus
             }
             _identifer = identiferBytes;
 
-            for (int i = TudpUtils.IdentiferByteCount; i < dataWithIdentifer.Length; i++)
+            for (int i = identiferBytes.Length; i < dataWithIdentifer.Length; i++)
             {
                 _data.Add(dataWithIdentifer[i]);
             }

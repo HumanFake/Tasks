@@ -2,7 +2,7 @@
 {
     public static class TudpUtils
     {
-        public const int MaxDaitagramByteCount = 64000;
-        public const int IdentiferByteCount = 32;
+        public const int MaxDaitagramByteCount = 60000;
+        public const int IdentiferByteCount = 4;
     }
 }

@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Timers;
 using JetBrains.Annotations;
 using NetUtils;
+using UdpPlus;
 
 namespace TudpServer
 {
     internal class Server
     {
-        private const int BufferSize = 1024;
         private const long TimerDelay = 500;
+        
+        private readonly object _counterMutex = new object();
 
         private readonly System.Net.Sockets.TcpListener _server;
+        private readonly TudpListener _serverN;
         private readonly Timer _speedometer = new Timer(TimerDelay);
 
         private long _totalReceivedBytesCount;
@@ -31,21 +35,11 @@ namespace TudpServer
             try
             {
                 _server = new System.Net.Sockets.TcpListener(address, port.AtInt);
+                _serverN = new TudpListener(port, address);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Не удалось запустить приложение под портом: {port.AtInt}");
-                try
-                {
-                    _server = new System.Net.Sockets.TcpListener(address, 0);
-                    var ipEndPoint = _server.LocalEndpoint as IPEndPoint;
-                    var currentPort = ipEndPoint?.Port;
-                    Console.WriteLine($"Автоматически выбран порт: {currentPort}");
-                }
-                catch (Exception ex)
-                {
-                    throw new ServerException(ex);
-                }
+                throw new ServerException(ex);
             }
             _speedometer.Elapsed += DisplayCurrentSpeed;
         }
@@ -59,41 +53,40 @@ namespace TudpServer
                 while (true)
                 {
                     Console.WriteLine("Ожидание подключений... ");
-                    using (var client = _server.AcceptTcpClient())
+                    _totalReceivedBytesCount = 0;
+                    _lastDisplayedReceivedBytesCount = 0;
+                    _speedometer.Start();
+                    try
                     {
-                        _totalReceivedBytesCount = 0;
-                        _lastDisplayedReceivedBytesCount = 0;
-                        _speedometer.Start();
-                        try
+                        var time = Stopwatch.StartNew();
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "TestReceived");
+                        using (var file = new FileStream(filePath, FileMode.OpenOrCreate))
                         {
-                            var clientIpEndPoint = client.Client.LocalEndPoint as IPEndPoint;
-                            Console.WriteLine($"Подключен клиент {clientIpEndPoint?.Address}. Выполнение запроса...");
-
-                            var time = Stopwatch.StartNew();
-                            using (var stream = client.GetStream())
+                            while (true)
                             {
-                                var buffer = new byte[BufferSize];
-
-                                while (true)
+                                var readedBytes = _serverN.Receive();
+                                if (readedBytes.Length == 0)
                                 {
-                                    var readedBytes = stream.Read(buffer, 0, buffer.Length);
-                                    if (readedBytes == 0)
-                                    {
-                                        break;
-                                    }
-                                    _totalReceivedBytesCount += readedBytes;
+                                    break;
+                                }
+                                file.Write(readedBytes, 0, readedBytes.Length);
+                                lock (_counterMutex)
+                                {
+                                    _totalReceivedBytesCount += readedBytes.Length;
                                 }
                             }
-                            DisplayResult(_totalReceivedBytesCount, time.ElapsedMilliseconds);
                         }
-                        catch (Exception)
-                        {
-                            Console.Error.WriteLine("Ошибка при получении данных.");
-                        }
-                        finally
-                        {
-                            _speedometer.Stop();
-                        }
+                        DisplayResult(_totalReceivedBytesCount, time.ElapsedMilliseconds);
+                        break;
+                    }
+                    catch (Exception)
+                    {
+                        Console.Error.WriteLine("Ошибка при получении данных.");
+                        break;
+                    }
+                    finally
+                    {
+                        _speedometer.Stop();
                     }
                 }
             }
@@ -115,12 +108,17 @@ namespace TudpServer
 
         private void DisplayCurrentSpeed([NotNull] object source, [NotNull] ElapsedEventArgs e)
         {
-            var cursorPosition = Console.CursorTop;
-            var receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
+
+            long receivedBytes;
+            lock (_counterMutex)
+            {
+                receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
+            }
             _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
 
             var averedgeSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
-            NetIO.ConsoleWrite(cursorPosition, "Текущая скорость: " + averedgeSpeed.ToString("F") + "МБ/с");
+            var cursorPosition = Console.CursorTop;
+            NetIO.ConsoleWrite(cursorPosition, "Current speed: " + averedgeSpeed.ToString("F") + "MB/s");
         }
 
         private static void DisplayResult(long byteCount, long milliseconds)

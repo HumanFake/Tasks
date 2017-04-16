@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace UdpPlus
@@ -20,10 +21,17 @@ namespace UdpPlus
         {
             while (true)
             {
-                IPEndPoint remoteIpEndPoint = null;
-                var receiveBytes = _client.Receive(ref remoteIpEndPoint);
-                var ud = new TudpData(receiveBytes);
-                NewMessege?.Invoke(ud);
+                try
+                {
+                    IPEndPoint remoteIpEndPoint = null;
+                    var receiveBytes = _client.Receive(ref remoteIpEndPoint);
+                    var tudpData = new TudpData(receiveBytes);
+                    NewMessege?.Invoke(tudpData);
+                }
+                catch (Exception)
+                {
+                    break;
+                }
             }
         }
     }

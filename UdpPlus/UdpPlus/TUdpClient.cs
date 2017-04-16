@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -20,50 +19,69 @@ namespace UdpPlus
             {
                 throw new ArgumentNullException(nameof(address));
             }
-            _udpClient = new UdpClient(address);
+            _udpClient = new UdpClient();
+            _udpClient.Connect(address);
         }
 
-        public void Send([NotNull] byte[] bytes)
+        public void SendFile([NotNull] Stream stream)
         {
-            if (bytes == null)
+            if (stream == null)
             {
-                throw new ArgumentNullException(nameof(bytes));
+                throw new ArgumentNullException(nameof(stream));
             }
             var receiver = new Receiver(_udpClient);
             var task = new Task(receiver.Listen);
             task.Start();
 
             var index = 1;
-            var currentPosition = 0;
-
-            while (currentPosition != bytes.Length - 1)
+            receiver.NewMessege += udpPData =>
             {
-                var identifer = BitConverter.GetBytes(index);
-                var buffer = new List<byte>();
-                buffer.AddRange(identifer);
-                for (int i = 0; i < TudpUtils.MaxDaitagramByteCount; i++)
+                var receivedIndetifer = BitConverter.ToInt32(udpPData.GetIdentifer(), 0);
+                if (receivedIndetifer.Equals(index))
                 {
-                    if (currentPosition == bytes.Length - 1)
-                    {
-                        break;
-                    }
-                    buffer.Add(bytes[currentPosition]);
-                    currentPosition++;
+                    index++;
                 }
-                _udpClient.Send(buffer.ToArray(), buffer.Count);
-                receiver.NewMessege += udpPData =>
+                if (receivedIndetifer.Equals(TudpData.LastMessegeIndetifer))
                 {
-                    if (udpPData.GetIdentifer().Equals(identifer))
+                    index = 0;
+                }
+            };
+
+            while (true)
+            {
+                var currentIndex = index;
+                var identifer = BitConverter.GetBytes(currentIndex);
+                var buffer = new byte[TudpUtils.MaxDaitagramByteCount];
+                var readBytes = stream.Read(buffer, 0, buffer.Length);
+
+                var messege = new byte[identifer.Length + readBytes];
+                for (int i = 0; i < identifer.Length; i++)
+                {
+                    messege[i] = identifer[i];
+                }
+                for (int i = 0; i < readBytes; i++)
+                {
+                    messege[i + identifer.Length] = buffer[i];
+                }
+
+                if (readBytes == 0)
+                {
+                    while (index != 0)
                     {
-                        index++;
+                        _udpClient.Send(TudpData.LastMessege, TudpData.LastMessege.Length);
                     }
-                };
+                    return;
+                }
+                while (currentIndex == index)
+                {
+                    _udpClient.Send(messege, messege.Length);
+                }
             }
         }
 
         protected override void FreeManagedResources()
         {
-            _udpClient?.Close();
+            _udpClient.Close();
         }
     }
 }

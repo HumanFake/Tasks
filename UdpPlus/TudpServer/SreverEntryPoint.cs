@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using NetUtils;
 
 namespace TudpServer
 {
-    class Program
+    static class SreverEntryPoint
     {
         private delegate void SignalHandler(int consoleSignal);
 
