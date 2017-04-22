@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using NetUtils;
 
 namespace TcpListener
@@ -23,19 +24,30 @@ namespace TcpListener
                     throw new Exception("Can't get local IP");
                 }
                 Console.Clear();
-                var server = new Server(port, address);
-
-                SignalHandler signalHandler = unused =>
+                using (var server = new Server(port, address))
                 {
-                    server.ListenStop();
-                };
-                SetSignalHandler(signalHandler, true);
+                    // Ситуация с тем, что у объекта уже вызвали Dispose обраатывается внутри метода
+                    // ReSharper disable once AccessToDisposedClosure
+                    SignalHandler signalHandler = unused => CloseServer(server);
+                    SetSignalHandler(signalHandler, true);
 
-                server.Listen();
+                    server.Listen();
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        private static void CloseServer([NotNull] Server server)
+        {
+            try
+            {
+                server.ListenStop();
+            }
+            catch (ObjectDisposedException)
+            {
             }
         }
     }

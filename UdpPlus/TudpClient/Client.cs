@@ -19,6 +19,7 @@ namespace TudpClient
             try
             {
                 _client = new UdpPlus.TudpClient(address);
+                _client.Connect();
             }
             catch (Exception exception)
             {

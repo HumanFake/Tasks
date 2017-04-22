@@ -9,7 +9,7 @@ using Timer = System.Timers.Timer;
 
 namespace UdpSelfCounter
 {
-    internal sealed class Receiver
+    internal sealed class Receiver : Disposable
     {
         private const int RecountTime = 2000;
 
@@ -34,11 +34,11 @@ namespace UdpSelfCounter
             _sendClient = sender;
             try
             {
-                _receiveClient = new UdpClient(port.GetPort);
+                _receiveClient = new UdpClient(port.AtInt);
             }
             catch (Exception)
             {
-                Console.WriteLine($"Can't star at {port.GetPort} port");
+                Console.WriteLine($"Can't star at {port.AtInt} port");
                 try
                 {
                     _receiveClient = new UdpClient(0);
@@ -86,18 +86,13 @@ namespace UdpSelfCounter
             {
                 throw new ReceiveException(ex.Message, ex.InnerException);
             }
-            finally
-            {
-                _receiveClient?.Close();
-                _recountTimer?.Close();
-            }
         }
 
         internal void StopListen()
         {
-            _recountTimer?.Stop();
-            _sendClient?.Send(ProgramData.OutMessage);
-            _receiveClient?.Close();
+            _recountTimer.Stop();
+            _sendClient.Send(ProgramData.OutMessage);
+            _receiveClient.Client.Shutdown(SocketShutdown.Both);
         }
 
         private void RecountDuplicates([NotNull] object unused, [NotNull] ElapsedEventArgs elapsedEventArgs)
@@ -151,6 +146,12 @@ namespace UdpSelfCounter
             {
                 _currentClients.Remove(message.Address);
             }
+        }
+
+        protected override void FreeManagedResources()
+        {
+            _recountTimer.Close();
+            _receiveClient.Close();
         }
     }
 }

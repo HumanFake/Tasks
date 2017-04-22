@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using NetUtils;
@@ -12,6 +12,7 @@ namespace UdpPlus
     public sealed class TudpClient : Disposable
     {
         private readonly UdpClient _udpClient;
+        private const int ResendMessegeTime = 1;
 
         public TudpClient([NotNull] IPEndPoint address)
         {
@@ -21,6 +22,11 @@ namespace UdpPlus
             }
             _udpClient = new UdpClient();
             _udpClient.Connect(address);
+        }
+
+        public void Connect()
+        {
+            _udpClient.Send(TudpData.ConnectionMessege, TudpData.ConnectionMessege.Length);
         }
 
         public void SendFile([NotNull] Stream stream)
@@ -36,12 +42,11 @@ namespace UdpPlus
             var index = 1;
             receiver.NewMessege += udpPData =>
             {
-                var receivedIndetifer = BitConverter.ToInt32(udpPData.GetIdentifer(), 0);
-                if (receivedIndetifer.Equals(index))
+                if (udpPData.CompareIdentifer(index))
                 {
                     index++;
                 }
-                if (receivedIndetifer.Equals(TudpData.LastMessegeIndetifer))
+                if (udpPData.IsLastMessege())
                 {
                     index = 0;
                 }
@@ -69,12 +74,14 @@ namespace UdpPlus
                     while (index != 0)
                     {
                         _udpClient.Send(TudpData.LastMessege, TudpData.LastMessege.Length);
+                        Thread.Sleep(ResendMessegeTime);
                     }
                     return;
                 }
                 while (currentIndex == index)
                 {
                     _udpClient.Send(messege, messege.Length);
+                    Thread.Sleep(ResendMessegeTime);
                 }
             }
         }

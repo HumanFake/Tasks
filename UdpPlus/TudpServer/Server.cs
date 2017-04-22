@@ -9,14 +9,11 @@ using UdpPlus;
 
 namespace TudpServer
 {
-    internal class Server
+    internal class Server : Disposable
     {
         private const long TimerDelay = 500;
         
-        private readonly object _counterMutex = new object();
-
-        private readonly System.Net.Sockets.TcpListener _server;
-        private readonly TudpListener _serverN;
+        private readonly TudpListener _server;
         private readonly Timer _speedometer = new Timer(TimerDelay);
 
         private long _totalReceivedBytesCount;
@@ -34,8 +31,7 @@ namespace TudpServer
             }
             try
             {
-                _server = new System.Net.Sockets.TcpListener(address, port.AtInt);
-                _serverN = new TudpListener(port, address);
+                _server = new TudpListener(port, address);
             }
             catch (Exception ex)
             {
@@ -48,32 +44,29 @@ namespace TudpServer
         {
             try
             {
-                _server.Start();
-
                 while (true)
                 {
                     Console.WriteLine("Ожидание подключений... ");
                     _totalReceivedBytesCount = 0;
                     _lastDisplayedReceivedBytesCount = 0;
-                    _speedometer.Start();
+                    var remoteIp = _server.WaitConnection();
+                    Console.Out.WriteLine($"{remoteIp} was connected...");
                     try
                     {
+                        _speedometer.Start();
                         var time = Stopwatch.StartNew();
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "TestReceived");
-                        using (var file = new FileStream(filePath, FileMode.OpenOrCreate))
+                        using (var file = new FileStream(filePath, FileMode.Create))
                         {
                             while (true)
                             {
-                                var readedBytes = _serverN.Receive();
+                                var readedBytes = _server.Read();
                                 if (readedBytes.Length == 0)
                                 {
                                     break;
                                 }
                                 file.Write(readedBytes, 0, readedBytes.Length);
-                                lock (_counterMutex)
-                                {
-                                    _totalReceivedBytesCount += readedBytes.Length;
-                                }
+                                _totalReceivedBytesCount += readedBytes.Length;
                             }
                         }
                         DisplayResult(_totalReceivedBytesCount, time.ElapsedMilliseconds);
@@ -97,28 +90,23 @@ namespace TudpServer
             finally
             {
                 _speedometer?.Close();
-                _server?.Stop();
             }
         }
 
         internal void StopListen()
         {
-            _server.Stop();
+            Console.Out.WriteLine("Over");
         }
 
         private void DisplayCurrentSpeed([NotNull] object source, [NotNull] ElapsedEventArgs e)
         {
-
-            long receivedBytes;
-            lock (_counterMutex)
-            {
-                receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
-            }
+            var totalReceivedBytesCount = _totalReceivedBytesCount;
+            var receivedBytes = totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
             _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
 
             var averedgeSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
             var cursorPosition = Console.CursorTop;
-            NetIO.ConsoleWrite(cursorPosition, "Current speed: " + averedgeSpeed.ToString("F") + "MB/s");
+            NetIO.ConsoleWrite(cursorPosition, "Current speed: " + averedgeSpeed.ToString("F4") + "MB/s");
         }
 
         private static void DisplayResult(long byteCount, long milliseconds)
@@ -132,6 +120,11 @@ namespace TudpServer
                 ? "Данные пряняты быстрее чем за 1ну миллисекунду."
                 : $"Средняя скорость: {(byteCount.BytesToMegaBytes() / milliseconds.MillisecondToSecond()):F} MB/c");
             Console.WriteLine();
+        }
+
+        protected override void FreeManagedResources()
+        {
+            _server.Dispose();
         }
     }
 }

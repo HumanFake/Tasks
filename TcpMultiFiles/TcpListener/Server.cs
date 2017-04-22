@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using JetBrains.Annotations;
 using NetUtils;
 
 namespace TcpListener
 {
-    internal sealed class Server
+    internal sealed class Server : Disposable
     {
         private readonly System.Net.Sockets.TcpListener _server;
 
@@ -55,27 +56,21 @@ namespace TcpListener
                     clientThread.Start();
                 }
             }
+            catch (SocketException e)
+            {
+                #if DEBUG
+                Console.Out.WriteLine(e);
+                #endif
+            }
             catch (Exception e)
             {
                 throw new ServerException(e);
-            }
-            finally
-            {
-                _server?.Stop();
             }
         }
 
         internal void ListenStop()
         {
-            try
-            {
-                _server.Stop();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            _server.Stop();
         }
         
         private static void GetResponse([NotNull] Receiver receiver)
@@ -91,6 +86,11 @@ namespace TcpListener
             {
                 Console.WriteLine("Error data recive.");
             }
+        }
+
+        protected override void FreeManagedResources()
+        {
+            _server.Stop();
         }
     }
 }

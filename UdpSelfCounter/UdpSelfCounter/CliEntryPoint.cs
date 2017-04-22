@@ -21,14 +21,16 @@ namespace UdpSelfCounter
                 {
                     sender.Send(ProgramData.EntryMessage);
 
-                    var receiver = new Receiver(sender, localPort);
-                    SignalHandler signalHandler = unused =>
+                    using (var receiver = new Receiver(sender, localPort))
                     {
-                        receiver.StopListen();
-                    };
-                    SetSignalHandler(signalHandler, true);
+                        SignalHandler signalHandler = unused =>
+                        {
+                            receiver.StopListen();
+                        };
+                        SetSignalHandler(signalHandler, true);
 
-                    receiver.Listen();
+                        receiver.Listen();
+                    }
                 }
             }
             catch (ReceiveException)

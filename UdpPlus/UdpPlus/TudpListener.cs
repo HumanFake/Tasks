@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Timers;
 using JetBrains.Annotations;
 using NetUtils;
 
@@ -10,6 +11,7 @@ namespace UdpPlus
     public class TudpListener : Disposable
     {
         private readonly UdpClient _udpClient;
+        private byte[] _currentIdentifer;
 
         public TudpListener([NotNull]Port port, [NotNull] IPAddress address)
         {
@@ -24,40 +26,46 @@ namespace UdpPlus
             _udpClient = new UdpClient(new IPEndPoint(address, port.AtInt));
         }
 
-        public byte[] Receive()
+        public IPAddress WaitConnection()
+        {
+            IPEndPoint remoteIpEndPoint = null;
+
+            while (true)
+            {
+                var receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
+                var tudpData = new TudpData(receiveBytes);
+                if (tudpData.IsConnectionMessege())
+                {
+                    return remoteIpEndPoint.Address;
+                }
+            }
+        }
+
+        public byte[] Read()
         {
             try
             {
-                byte[] dategrammIdentifer = null;
-                var reciveData = new List<byte>();
-
                 while (true)
                 {
                     IPEndPoint remoteIpEndPoint = null;
 
                     var receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
                     var tudpData = new TudpData(receiveBytes);
-                    var reveivedategrammIdentifer = tudpData.GetIdentifer();
+                    var reveivedDategrammIdentifer = tudpData.GetIdentifer();
 
-                    if (BitConverter.ToInt32(reveivedategrammIdentifer, 0) == TudpData.LastMessegeIndetifer)
+                    if (tudpData.IsLastMessege())
                     {
                         _udpClient.Send(TudpData.LastMessege, TudpData.LastMessege.Length, remoteIpEndPoint);
                         break;
                     }
-                    if (dategrammIdentifer == null ||
-                        BitConverter.ToInt32(reveivedategrammIdentifer, 0) != BitConverter.ToInt32(dategrammIdentifer, 0))
+                    _udpClient.Send(reveivedDategrammIdentifer, reveivedDategrammIdentifer.Length, remoteIpEndPoint);
+                    if (_currentIdentifer == null || false == tudpData.CompareIdentifer(_currentIdentifer))
                     {
-                        reciveData.AddRange(tudpData.GetDategramm());
-                        dategrammIdentifer = reveivedategrammIdentifer;
-                        
-                        var i = BitConverter.ToInt32(reveivedategrammIdentifer, 0);
-                        Console.Out.WriteLine($"получен пакет {i}");
-                        Console.Out.WriteLine($"total count b {reciveData.Count}");
+                        _currentIdentifer = reveivedDategrammIdentifer;
+                        return tudpData.GetDategramm();
                     }
-                    _udpClient.Send(reveivedategrammIdentifer, reveivedategrammIdentifer.Length, remoteIpEndPoint);
                 }
-
-                return reciveData.ToArray();
+                return new byte[0];
             }
             catch (Exception e)
             {
@@ -68,7 +76,7 @@ namespace UdpPlus
 
         protected override void FreeManagedResources()
         {
-            _udpClient?.Close();
+            _udpClient.Close();
         }
     }
 }
