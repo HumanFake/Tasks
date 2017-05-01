@@ -84,7 +84,7 @@ namespace TcpListener
             }
             catch (Exception)
             {
-                Console.WriteLine("Error data recive.");
+                Console.WriteLine("Error data receive.");
             }
         }
 

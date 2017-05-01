@@ -7,60 +7,60 @@ namespace UdpPlus
 {
     internal sealed class TudpData
     {
-        private const int LastMessegeIndetifer = -1;
-        private const int ConnectionMessegeIndetifer = -2;
+        private const int LastMessageIdentifier = -1;
+        private const int ConnectionMessegeIdentifier = -2;
 
         private readonly List<byte> _data = new List<byte>();
-        private readonly byte[] _identifer;
-        private readonly int _identiferAtInt;
+        private readonly byte[] _identifier;
+        private readonly int _identifierAtInt;
 
-        internal readonly static byte[] LastMessege = BitConverter.GetBytes(LastMessegeIndetifer);
-        internal readonly static byte[] ConnectionMessege = BitConverter.GetBytes(ConnectionMessegeIndetifer);
+        internal static readonly byte[] LastMessage = BitConverter.GetBytes(LastMessageIdentifier);
+        internal static readonly byte[] ConnectionMessage = BitConverter.GetBytes(ConnectionMessegeIdentifier);
 
-        internal TudpData([NotNull] byte[] dataWithIdentifer)
+        internal TudpData([NotNull] byte[] dataWithIdentifier)
         {
-            var identiferBytes = new byte[TudpUtils.IdentiferByteCount];
-            for (int i = 0; i < identiferBytes.Length; i++)
+            var identifierBytes = new byte[TudpUtils.IdentifierByteCount];
+            for (int i = 0; i < identifierBytes.Length; i++)
             {
-                identiferBytes[i] = dataWithIdentifer[i];
+                identifierBytes[i] = dataWithIdentifier[i];
             }
-            _identifer = identiferBytes;
-            _identiferAtInt = BitConverter.ToInt32(identiferBytes, 0);
+            _identifier = identifierBytes;
+            _identifierAtInt = BitConverter.ToInt32(identifierBytes, 0);
 
-            for (int i = identiferBytes.Length; i < dataWithIdentifer.Length; i++)
+            for (int i = identifierBytes.Length; i < dataWithIdentifier.Length; i++)
             {
-                _data.Add(dataWithIdentifer[i]);
+                _data.Add(dataWithIdentifier[i]);
             }
         }
 
-        internal byte[] GetDategramm()
+        internal byte[] GetDatagram()
         {
             return _data.ToArray();
         }
 
-        internal byte[] GetIdentifer()
+        internal byte[] GetIdentifier()
         {
-            return _identifer;
+            return _identifier;
         }
 
-        internal bool IsConnectionMessege()
+        internal bool IsConnectionMessage()
         {
-            return _identiferAtInt == ConnectionMessegeIndetifer;
+            return _identifierAtInt == ConnectionMessegeIdentifier;
         }
 
-        internal bool IsLastMessege()
+        internal bool IsLastMessage()
         {
-            return _identiferAtInt == LastMessegeIndetifer;
+            return _identifierAtInt == LastMessageIdentifier;
         }
 
-        internal bool CompareIdentifer(int candidate)
+        internal bool CompareIdentifier(int candidate)
         {
-            return _identiferAtInt == candidate;
+            return _identifierAtInt == candidate;
         }
 
-        internal bool CompareIdentifer(byte[] candidate)
+        internal bool CompareIdentifier(byte[] candidate)
         {
-            return _identiferAtInt == BitConverter.ToInt32(candidate, 0);
+            return _identifierAtInt == BitConverter.ToInt32(candidate, 0);
         }
     }
 }

@@ -23,10 +23,9 @@ namespace UdpSelfCounter
 
                     using (var receiver = new Receiver(sender, localPort))
                     {
-                        SignalHandler signalHandler = unused =>
-                        {
-                            receiver.StopListen();
-                        };
+                        // Ситуация с тем, что у объекта уже вызвали Dispose обраатывается внутри метода
+                        // ReSharper disable once AccessToDisposedClosure
+                        SignalHandler signalHandler = unused => CloseServer(receiver);
                         SetSignalHandler(signalHandler, true);
 
                         receiver.Listen();
@@ -44,6 +43,17 @@ namespace UdpSelfCounter
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+        }
+
+        private static void CloseServer(Receiver receiver)
+        {
+            try
+            {
+                receiver.StopListen();
+            }
+            catch (ObjectDisposedException)
+            {
             }
         }
     }

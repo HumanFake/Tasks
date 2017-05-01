@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Timers;
 using JetBrains.Annotations;
 using NetUtils;
 
@@ -10,8 +8,10 @@ namespace UdpPlus
 {
     public class TudpListener : Disposable
     {
+        private const int LastMessageCount = 5;
+        private const int ConnectionMessageCount = 5;
         private readonly UdpClient _udpClient;
-        private byte[] _currentIdentifer;
+        private byte[] _currentIdentifier;
 
         public TudpListener([NotNull]Port port, [NotNull] IPAddress address)
         {
@@ -34,8 +34,12 @@ namespace UdpPlus
             {
                 var receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
                 var tudpData = new TudpData(receiveBytes);
-                if (tudpData.IsConnectionMessege())
+                if (tudpData.IsConnectionMessage())
                 {
+                    for (int i = 0; i < ConnectionMessageCount; i++)
+                    {
+                        _udpClient.Send(TudpData.ConnectionMessage, TudpData.ConnectionMessage.Length, remoteIpEndPoint);
+                    }
                     return remoteIpEndPoint.Address;
                 }
             }
@@ -51,18 +55,23 @@ namespace UdpPlus
 
                     var receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
                     var tudpData = new TudpData(receiveBytes);
-                    var reveivedDategrammIdentifer = tudpData.GetIdentifer();
+                    var receivedDatagramIdentifier = tudpData.GetIdentifier();
 
-                    if (tudpData.IsLastMessege())
+                    if (tudpData.IsLastMessage())
                     {
-                        _udpClient.Send(TudpData.LastMessege, TudpData.LastMessege.Length, remoteIpEndPoint);
+                        for (int i = 0; i < LastMessageCount; i++)
+                        {
+                            _udpClient.Send(TudpData.LastMessage, TudpData.LastMessage.Length, remoteIpEndPoint);
+                        }
                         break;
                     }
-                    _udpClient.Send(reveivedDategrammIdentifer, reveivedDategrammIdentifer.Length, remoteIpEndPoint);
-                    if (_currentIdentifer == null || false == tudpData.CompareIdentifer(_currentIdentifer))
+
+                    _udpClient.Send(receivedDatagramIdentifier, receivedDatagramIdentifier.Length, remoteIpEndPoint);
+
+                    if (_currentIdentifier == null || false == tudpData.CompareIdentifier(_currentIdentifier))
                     {
-                        _currentIdentifer = reveivedDategrammIdentifer;
-                        return tudpData.GetDategramm();
+                        _currentIdentifier = receivedDatagramIdentifier;
+                        return tudpData.GetDatagram();
                     }
                 }
                 return new byte[0];

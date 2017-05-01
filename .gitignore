@@ -75,3 +75,7 @@ TcpListener/.vs/TcpListener/v15/.suo
 TcpListener/.vs/TcpListener/v14/.suo
 TcpListener/.vs/TcpListener/v14/.suo
 UdpPlus/.vs/UdpPlus/v14/.suo
+UdpPlus/TudpServer/bin/*
+UdpPlus/TudpClient/bin/*
+UdpPlus/TudpServer/obj/*
+UdpPlus/TudpClient/obj/*

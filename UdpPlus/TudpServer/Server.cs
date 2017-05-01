@@ -15,6 +15,7 @@ namespace TudpServer
         
         private readonly TudpListener _server;
         private readonly Timer _speedometer = new Timer(TimerDelay);
+        private bool _disposed;
 
         private long _totalReceivedBytesCount;
         private long _lastDisplayedReceivedBytesCount;
@@ -46,7 +47,7 @@ namespace TudpServer
             {
                 while (true)
                 {
-                    Console.WriteLine("Ожидание подключений... ");
+                    Console.WriteLine("Connection waiting... ");
                     _totalReceivedBytesCount = 0;
                     _lastDisplayedReceivedBytesCount = 0;
                     var remoteIp = _server.WaitConnection();
@@ -70,11 +71,10 @@ namespace TudpServer
                             }
                         }
                         DisplayResult(_totalReceivedBytesCount, time.ElapsedMilliseconds);
-                        break;
                     }
                     catch (Exception)
                     {
-                        Console.Error.WriteLine("Ошибка при получении данных.");
+                        Console.Error.WriteLine("Error data receive.");
                         break;
                     }
                     finally
@@ -85,6 +85,10 @@ namespace TudpServer
             }
             catch (Exception e)
             {
+                if (_disposed)
+                {
+                    return;
+                }
                 throw new ServerException(e);
             }
             finally
@@ -95,7 +99,7 @@ namespace TudpServer
 
         internal void StopListen()
         {
-            Console.Out.WriteLine("Over");
+            FreeManagedResources();
         }
 
         private void DisplayCurrentSpeed([NotNull] object source, [NotNull] ElapsedEventArgs e)
@@ -113,17 +117,18 @@ namespace TudpServer
         {
             var cursorPosition = Console.CursorTop;
             NetIO.ConsoleWrite(cursorPosition, "                                                               ");
-
-            Console.WriteLine($"Байт принято: {byteCount}");
-            Console.WriteLine($"Общее время: {milliseconds.MillisecondToSecond():F} c");
+            
+            Console.WriteLine($"Total bytes: {byteCount}");
+            Console.WriteLine($"Total time: {milliseconds.MillisecondToSecond():F} s");
             Console.WriteLine(milliseconds <= 0
-                ? "Данные пряняты быстрее чем за 1ну миллисекунду."
-                : $"Средняя скорость: {(byteCount.BytesToMegaBytes() / milliseconds.MillisecondToSecond()):F} MB/c");
+                ? "Receive faster when one second."
+                : $"Average speed: {byteCount.BytesToMegaBytes() / milliseconds.MillisecondToSecond():F} MB/s");
             Console.WriteLine();
         }
 
         protected override void FreeManagedResources()
         {
+            _disposed = true;
             _server.Dispose();
         }
     }
