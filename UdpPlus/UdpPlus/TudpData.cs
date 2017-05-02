@@ -8,14 +8,14 @@ namespace UdpPlus
     internal sealed class TudpData
     {
         private const int LastMessageIdentifier = -1;
-        private const int ConnectionMessegeIdentifier = -2;
+        private const int ConnectionMessageIdentifier = -2;
 
         private readonly List<byte> _data = new List<byte>();
         private readonly byte[] _identifier;
         private readonly int _identifierAtInt;
 
         internal static readonly byte[] LastMessage = BitConverter.GetBytes(LastMessageIdentifier);
-        internal static readonly byte[] ConnectionMessage = BitConverter.GetBytes(ConnectionMessegeIdentifier);
+        internal static readonly byte[] ConnectionMessage = BitConverter.GetBytes(ConnectionMessageIdentifier);
 
         internal TudpData([NotNull] byte[] dataWithIdentifier)
         {
@@ -45,7 +45,7 @@ namespace UdpPlus
 
         internal bool IsConnectionMessage()
         {
-            return _identifierAtInt == ConnectionMessegeIdentifier;
+            return _identifierAtInt == ConnectionMessageIdentifier;
         }
 
         internal bool IsLastMessage()

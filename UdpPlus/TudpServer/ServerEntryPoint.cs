@@ -4,7 +4,7 @@ using NetUtils;
 
 namespace TudpServer
 {
-    static class SreverEntryPoint
+    static class ServerEntryPoint
     {
         private delegate void SignalHandler(int consoleSignal);
 
@@ -20,16 +20,16 @@ namespace TudpServer
             {
                 if (address == null)
                 {
-                    throw new ArgumentException("локальный IP не найден");
+                    throw new ArgumentException("local IP noy found");
                 }
                 Console.Clear();
                 var server = new Server(port, address);
 
-                SignalHandler signalHandler = unused =>
+                void SignalHandler(int unused)
                 {
                     server.StopListen();
-                };
-                SetSignalHandler(signalHandler, true);
+                }
+                SetSignalHandler(SignalHandler, true);
 
                 server.Listen();
             }

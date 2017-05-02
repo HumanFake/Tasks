@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InvalidDatagremException.cs" />
+    <Compile Include="InvalidDatagramException.cs" />
     <Compile Include="TimeoutReceiveExseption.cs" />
     <Compile Include="TudpClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

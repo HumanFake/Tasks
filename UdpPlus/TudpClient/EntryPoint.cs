@@ -7,7 +7,7 @@ namespace TudpClient
 {
     static class EntryPoint
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var port = Port.ReadPort();
             var ipAddress = NetIO.ReadAddress();
@@ -22,6 +22,7 @@ namespace TudpClient
                 {
                     using (var client = new Client(ipEndPoint))
                     {
+                        Console.WriteLine("Sending data...");
                         client.Send(stream);
                         Console.WriteLine("Data sending complete...");
                     }

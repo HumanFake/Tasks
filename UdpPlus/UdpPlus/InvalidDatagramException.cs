@@ -2,7 +2,7 @@
 
 namespace UdpPlus
 {
-    public class InvalidDatagremException : Exception
+    public class InvalidDatagramException : Exception
     {
         
     }

@@ -31,7 +31,7 @@ namespace UdpPlus
             var answer = Send(TudpData.ConnectionMessage, TudpData.ConnectionMessage.Length);
             if (false == answer.IsConnectionMessage())
             {
-                throw new InvalidDatagremException();
+                throw new InvalidDatagramException();
             }
         }
 

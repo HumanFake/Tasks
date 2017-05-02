@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Xml.Serialization;
 using JetBrains.Annotations;
 // ReSharper disable InconsistentNaming
 
@@ -74,7 +73,7 @@ namespace NetUtils
         private static void Write(int line, [NotNull] string text)
         {
             Console.SetCursorPosition(0, line);
-            Console.Write(" ", 0, Console.WindowWidth);
+            Console.Write(" ");
             Console.SetCursorPosition(0, line);
             Console.Write(text);
         }

@@ -61,13 +61,13 @@ namespace TudpServer
                         {
                             while (true)
                             {
-                                var readedBytes = _server.Read();
-                                if (readedBytes.Length == 0)
+                                var readBytes = _server.Read();
+                                if (readBytes.Length == 0)
                                 {
                                     break;
                                 }
-                                file.Write(readedBytes, 0, readedBytes.Length);
-                                _totalReceivedBytesCount += readedBytes.Length;
+                                file.Write(readBytes, 0, readBytes.Length);
+                                _totalReceivedBytesCount += readBytes.Length;
                             }
                         }
                         DisplayResult(_totalReceivedBytesCount, time.ElapsedMilliseconds);
@@ -108,9 +108,9 @@ namespace TudpServer
             var receivedBytes = totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
             _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
 
-            var averedgeSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
+            var averageSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
             var cursorPosition = Console.CursorTop;
-            NetIO.ConsoleWrite(cursorPosition, "Current speed: " + averedgeSpeed.ToString("F4") + "MB/s");
+            NetIO.ConsoleWrite(cursorPosition, "Current speed: " + averageSpeed.ToString("F4") + "MB/s");
         }
 
         private static void DisplayResult(long byteCount, long milliseconds)
