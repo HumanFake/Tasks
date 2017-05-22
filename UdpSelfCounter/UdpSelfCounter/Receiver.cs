@@ -30,7 +30,7 @@ namespace UdpSelfCounter
                 throw new ArgumentNullException(nameof(port));
             }
 
-            _currentClients.Add(NetIO.FindLocalIpAddressOrNull());
+            _currentClients.Add(NetIo.FindLocalIpAddressOrNull());
             _sendClient = sender;
             try
             {
@@ -51,7 +51,7 @@ namespace UdpSelfCounter
                     throw new ReceiveException(ex.Message, ex);
                 }
             }
-            _receiveClient.JoinMulticastGroup(ProgramData.BroadcasAddress);
+            _receiveClient.JoinMulticastGroup(ProgramData.BroadcastAddress);
 
             _recountTimer.Elapsed += RecountDuplicates;
             _recountTimer.AutoReset = true;
@@ -102,7 +102,7 @@ namespace UdpSelfCounter
                 lock (_locker)
                 {
                     _currentClients.Clear();
-                    _currentClients.Add(NetIO.FindLocalIpAddressOrNull());
+                    _currentClients.Add(NetIo.FindLocalIpAddressOrNull());
                 }
                 _sendClient.Send(ProgramData.EntryMessage);
             }

@@ -4,17 +4,16 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using JetBrains.Annotations;
-// ReSharper disable InconsistentNaming
 
 namespace NetUtils
 {
-    public static class NetIO
+    public static class NetIo
     {
         private const string InvalidIp = "Invalid IP.";
         private const double BytesInMegaBytes = 1024.0;
         private const double MillisecondsInSecond = 1000.0;
 
-        [UsedImplicitly]
+        [PublicAPI]
         public static IPAddress ReadAddress()
         {
             IPAddress address;
@@ -39,7 +38,7 @@ namespace NetUtils
             return address;
         }
 
-        [UsedImplicitly]
+        [PublicAPI]
         public static void ConsoleWrite(int line, [NotNull] string text)
         {
             if (text == null)
@@ -54,12 +53,16 @@ namespace NetUtils
             Console.SetCursorPosition(currentLeftCursorPosition, currentTopCursorPosition);
         }
 
-        [UsedImplicitly]
+        [PublicAPI]
         public static void ConsoleWriteLine(int line, [NotNull] string text)
         {
             if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
+            }
+            if (line < 0)
+            {
+                throw new ArgumentException($"{nameof(line)} must be greater than zero");
             }
             var currentLeftCursorPosition = Console.CursorLeft;
             var currentTopCursorPosition = Console.CursorTop;
@@ -104,13 +107,13 @@ namespace NetUtils
             return null;
         }
 
-        [UsedImplicitly]
+        [PublicAPI]
         public static double BytesToMegaBytes(this long sourse)
         {
             return sourse / BytesInMegaBytes / BytesInMegaBytes;
         }
 
-        [UsedImplicitly]
+        [PublicAPI]
         public static double MillisecondToSecond(this long sourse)
         {
             return sourse / MillisecondsInSecond;

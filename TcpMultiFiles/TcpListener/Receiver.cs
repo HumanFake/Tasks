@@ -47,14 +47,14 @@ namespace TcpListener
 
                     while (true)
                     {
-                        var readedBytes = stream.Read(buffer, 0, buffer.Length);
-                        if (readedBytes == 0)
+                        var readBytes = stream.Read(buffer, 0, buffer.Length);
+                        if (readBytes == 0)
                         {
                             break;
                         }
                         lock (_locker)
                         {
-                            _totalReceivedBytesCount += readedBytes;
+                            _totalReceivedBytesCount += readBytes;
                         }
                     }
                 }
@@ -73,8 +73,8 @@ namespace TcpListener
                 var receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
                 _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
 
-                var averedgeSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
-                NetIO.ConsoleWrite(_cursorPosition, "Current speed: " + averedgeSpeed.ToString("F") + "MB/s");
+                var averageSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
+                NetIo.ConsoleWrite(_cursorPosition, "Current speed: " + averageSpeed.ToString("F") + "MB/s");
             }
         }
 
@@ -82,7 +82,7 @@ namespace TcpListener
         {
             lock (_locker)
             {
-                NetIO.ConsoleWrite(_cursorPosition, "                                                               ");
+                NetIo.ConsoleWrite(_cursorPosition, "                                                               ");
                 Console.WriteLine();
                 Console.WriteLine($"Data receiving complete from: {clientIp}");
                 Console.WriteLine($"Total bytes: {byteCount}");
@@ -96,8 +96,8 @@ namespace TcpListener
 
         protected override void FreeManagedResources()
         {
-            _speedometer?.Close();
-            _tcpClient?.Close();
+            _speedometer.Close();
+            _tcpClient.Close();
         }
     }
 }

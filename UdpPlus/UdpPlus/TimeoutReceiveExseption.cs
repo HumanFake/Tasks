@@ -2,7 +2,7 @@
 
 namespace UdpPlus
 {
-    public class TimeoutReceiveException : Exception
+    public sealed class TimeoutReceiveException : Exception
     {
     }
 }

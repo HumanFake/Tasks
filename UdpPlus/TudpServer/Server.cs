@@ -9,7 +9,7 @@ using UdpPlus;
 
 namespace TudpServer
 {
-    internal class Server : Disposable
+    internal sealed class Server : Disposable
     {
         private const long TimerDelay = 500;
         
@@ -110,13 +110,13 @@ namespace TudpServer
 
             var averageSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
             var cursorPosition = Console.CursorTop;
-            NetIO.ConsoleWrite(cursorPosition, "Current speed: " + averageSpeed.ToString("F4") + "MB/s");
+            NetIo.ConsoleWrite(cursorPosition, "Current speed: " + averageSpeed.ToString("F4") + "MB/s");
         }
 
         private static void DisplayResult(long byteCount, long milliseconds)
         {
             var cursorPosition = Console.CursorTop;
-            NetIO.ConsoleWrite(cursorPosition, "                                                               ");
+            NetIo.ConsoleWrite(cursorPosition, "                                                               ");
             
             Console.WriteLine($"Total bytes: {byteCount}");
             Console.WriteLine($"Total time: {milliseconds.MillisecondToSecond():F} s");

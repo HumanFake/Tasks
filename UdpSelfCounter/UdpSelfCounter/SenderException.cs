@@ -2,7 +2,7 @@
 
 namespace UdpSelfCounter
 {
-    internal class SenderException : Exception
+    internal sealed class SenderException : Exception
     {
         public SenderException(string message, Exception innerException) : base(message, innerException)
         {

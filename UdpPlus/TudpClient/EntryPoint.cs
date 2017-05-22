@@ -5,12 +5,12 @@ using NetUtils;
 
 namespace TudpClient
 {
-    static class EntryPoint
+    internal static class EntryPoint
     {
-        static void Main()
+        private static void Main()
         {
             var port = Port.ReadPort();
-            var ipAddress = NetIO.ReadAddress();
+            var ipAddress = NetIo.ReadAddress();
 
             var ipEndPoint = new IPEndPoint(ipAddress, port.AtInt);
 

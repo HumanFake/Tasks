@@ -25,8 +25,8 @@ namespace UdpSelfCounter
                     {
                         // Ситуация с тем, что у объекта уже вызвали Dispose обраатывается внутри метода
                         // ReSharper disable once AccessToDisposedClosure
-                        SignalHandler signalHandler = unused => CloseServer(receiver);
-                        SetSignalHandler(signalHandler, true);
+                        SignalHandler handler = unused => CloseServer(receiver);
+                        SetSignalHandler(handler, true);
 
                         receiver.Listen();
                     }
@@ -38,7 +38,7 @@ namespace UdpSelfCounter
             }
             catch (SenderException)
             {
-                Console.WriteLine("error when message is sended");
+                Console.WriteLine("error when message is sent");
             }
             catch (Exception ex)
             {

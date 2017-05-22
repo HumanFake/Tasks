@@ -2,9 +2,9 @@
 
 namespace NetUtils
 {
-    public class ServerException : Exception
+    public sealed class ServerException : Exception
     {
-        private const string DefaultMessage = "Ошибка в работе сервера";
+        private const string DefaultMessage = "server error";
 
         public ServerException(Exception innerException, string message = DefaultMessage) : base(message, innerException)
         {

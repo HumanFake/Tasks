@@ -50,7 +50,7 @@ namespace TcpClient
         protected override void FreeManagedResources()
         {
             _stream?.Close();
-            _client?.Close();
+            _client.Close();
         }
     }
 }

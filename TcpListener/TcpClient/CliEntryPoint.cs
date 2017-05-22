@@ -10,7 +10,7 @@ namespace TcpClient
         private static void Main()
         {
             var port = Port.ReadPort();
-            var ipAddress = NetIO.ReadAddress();
+            var ipAddress = NetIo.ReadAddress();
 
             var ipEndPoint = new IPEndPoint(ipAddress, port.AtInt);
 

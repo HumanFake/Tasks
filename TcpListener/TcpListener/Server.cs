@@ -120,13 +120,13 @@ namespace TcpListener
             _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
 
             var averedgeSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
-            NetIO.ConsoleWrite(cursorPosition, "Текущая скорость: " + averedgeSpeed.ToString("F") + "МБ/с");
+            NetIo.ConsoleWrite(cursorPosition, "Текущая скорость: " + averedgeSpeed.ToString("F") + "МБ/с");
         }
 
         private static void DisplayResult(long byteCount, long milliseconds)
         {
             var cursorPosition = Console.CursorTop;
-            NetIO.ConsoleWrite(cursorPosition, "                                                               ");
+            NetIo.ConsoleWrite(cursorPosition, "                                                               ");
 
             Console.WriteLine($"Байт принято: {byteCount}");
             Console.WriteLine($"Общее время: {milliseconds.MillisecondToSecond():F} c");

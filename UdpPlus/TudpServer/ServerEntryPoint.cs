@@ -4,7 +4,7 @@ using NetUtils;
 
 namespace TudpServer
 {
-    static class ServerEntryPoint
+    internal static class ServerEntryPoint
     {
         private delegate void SignalHandler(int consoleSignal);
 
@@ -14,7 +14,7 @@ namespace TudpServer
         private static void Main()
         {
             var port = Port.ReadPort();
-            var address = NetIO.FindLocalIpAddressOrNull();
+            var address = NetIo.FindLocalIpAddressOrNull();
 
             try
             {

@@ -43,21 +43,15 @@ namespace UdpPlus
             }
 
             var index = 1;
+            var buffer = new byte[TudpUtils.MaxDatagramByteCount];
             while (true)
             {
                 var identifier = BitConverter.GetBytes(index);
-                var buffer = new byte[TudpUtils.MaxDatagramByteCount];
                 var readBytes = stream.Read(buffer, 0, buffer.Length);
 
                 var message = new byte[identifier.Length + readBytes];
-                for (int i = 0; i < identifier.Length; i++)
-                {
-                    message[i] = identifier[i];
-                }
-                for (int i = 0; i < readBytes; i++)
-                {
-                    message[i + identifier.Length] = buffer[i];
-                }
+                message.CopyTo(identifier, 0);
+                message.CopyTo(buffer, identifier.Length);
 
                 if (readBytes == 0)
                 {
@@ -66,7 +60,7 @@ namespace UdpPlus
                     {
                         _udpClient.Send(TudpData.LastMessage, TudpData.LastMessage.Length);
                         sendTryCount++;
-                        var answer = WaitAnswer();
+                        var answer = WaitAnswerOrNull();
                         if (answer != null && answer.IsLastMessage())
                         {
                             break;
@@ -90,15 +84,20 @@ namespace UdpPlus
             }
         }
 
-        private TudpData Send(byte[] bytes, int bytesCount)
+        private TudpData Send([NotNull] byte[] bytes, int bytesCount)
         {
+            if (bytesCount < 0)
+            {
+                throw new ArgumentException($"{nameof(bytesCount)} must be greater than zero");
+            }
+
             var sendTryCount = 0;
             while (true)
             {
                 _udpClient.Send(bytes, bytesCount);
                 sendTryCount++;
 
-                var answer = WaitAnswer();
+                var answer = WaitAnswerOrNull();
                 if (answer != null)
                 {
                     return answer;
@@ -112,7 +111,7 @@ namespace UdpPlus
         }
 
         [CanBeNull]
-        private TudpData WaitAnswer()
+        private TudpData WaitAnswerOrNull()
         {
             while (true)
             {
