@@ -108,15 +108,15 @@ namespace NetUtils
         }
 
         [PublicAPI]
-        public static double BytesToMegaBytes(this long sourse)
+        public static double BytesToMegaBytes(this long source)
         {
-            return sourse / BytesInMegaBytes / BytesInMegaBytes;
+            return source / BytesInMegaBytes / BytesInMegaBytes;
         }
 
         [PublicAPI]
-        public static double MillisecondToSecond(this long sourse)
+        public static double MillisecondToSecond(this long source)
         {
-            return sourse / MillisecondsInSecond;
+            return source / MillisecondsInSecond;
         }
     }
 }

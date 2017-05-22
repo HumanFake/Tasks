@@ -2,9 +2,11 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Timers;
 using JetBrains.Annotations;
 using NetUtils;
+using Timer = System.Timers.Timer;
 
 namespace TcpListener
 {
@@ -16,7 +18,8 @@ namespace TcpListener
         private readonly TcpClient _tcpClient;
         private readonly Timer _speedometer = new Timer(TimerDelay);
         private readonly int _cursorPosition;
-        private readonly object _locker = new object();
+        private readonly object _monitor = new object();
+        private readonly object _outputMonitor = new object();
 
         private long _totalReceivedBytesCount;
         private long _lastDisplayedReceivedBytesCount;
@@ -32,7 +35,7 @@ namespace TcpListener
             _speedometer.Elapsed += DisplayCurrentSpeed;
         }
 
-        internal void ReceiveData()
+        internal void ReceiveData(CancellationToken cancellationToken)
         {
             _speedometer.Start();
             try
@@ -47,12 +50,18 @@ namespace TcpListener
 
                     while (true)
                     {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+
+                            Console.WriteLine($"data receive from {clientIpEndPoint?.Address} was interrupt");
+                            break;
+                        }
                         var readBytes = stream.Read(buffer, 0, buffer.Length);
                         if (readBytes == 0)
                         {
                             break;
                         }
-                        lock (_locker)
+                        lock (_monitor)
                         {
                             _totalReceivedBytesCount += readBytes;
                         }
@@ -68,11 +77,14 @@ namespace TcpListener
 
         private void DisplayCurrentSpeed([NotNull] object source, [NotNull]  ElapsedEventArgs e)
         {
-            lock (_locker)
+            long receivedBytes;
+            lock (_monitor)
             {
-                var receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
+                receivedBytes = _totalReceivedBytesCount - _lastDisplayedReceivedBytesCount;
                 _lastDisplayedReceivedBytesCount = _lastDisplayedReceivedBytesCount + receivedBytes;
-
+            }
+            lock (_outputMonitor)
+            {
                 var averageSpeed = receivedBytes.BytesToMegaBytes() / TimerDelay.MillisecondToSecond();
                 NetIo.ConsoleWrite(_cursorPosition, "Current speed: " + averageSpeed.ToString("F") + "MB/s");
             }
@@ -80,7 +92,7 @@ namespace TcpListener
 
         private void DisplayResult(long byteCount, long milliseconds, [CanBeNull] string clientIp)
         {
-            lock (_locker)
+            lock (_outputMonitor)
             {
                 NetIo.ConsoleWrite(_cursorPosition, "                                                               ");
                 Console.WriteLine();

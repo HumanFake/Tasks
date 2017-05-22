@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading;
 using JetBrains.Annotations;
 using NetUtils;
@@ -9,7 +11,14 @@ namespace TcpListener
 {
     internal sealed class Server : Disposable
     {
+        private delegate void SignalHandler(int consoleSignal);
+
+        [DllImport("Kernel32", EntryPoint = "SetConsoleCtrlHandler")]
+        private static extern bool SetSignalHandler(SignalHandler handler, bool addHandler);
+
         private readonly System.Net.Sockets.TcpListener _server;
+        private readonly List<Thread> _threads = new List<Thread>();
+        private readonly CancellationTokenSource CancelTokenSource = new CancellationTokenSource();
 
         internal Server([NotNull] Port port, [NotNull] IPAddress address)
         {
@@ -39,8 +48,10 @@ namespace TcpListener
                     throw new ServerException(e);
                 }
             }
+            void SignalHandler(int unused) => ListenStop();
+            SetSignalHandler(SignalHandler, true);
         }
-        
+
         internal void Listen()
         {
             try
@@ -52,15 +63,17 @@ namespace TcpListener
                     var tcpClient = _server.AcceptTcpClient();
                     var responseClient = new Receiver(tcpClient);
 
-                    var clientThread = new Thread(() => GetResponse(responseClient));
+                    var token = CancelTokenSource.Token;
+                    var clientThread = new Thread(() => GetResponse(responseClient, token));
                     clientThread.Start();
+                    clientThread.Interrupt();
                 }
             }
             catch (SocketException e)
             {
-                #if DEBUG
+#if DEBUG
                 Console.Out.WriteLine(e);
-                #endif
+#endif
             }
             catch (Exception e)
             {
@@ -68,18 +81,19 @@ namespace TcpListener
             }
         }
 
-        internal void ListenStop()
+        private void ListenStop()
         {
+            CancelTokenSource.Cancel();
             _server.Stop();
         }
-        
-        private static void GetResponse([NotNull] Receiver receiver)
+
+        private static void GetResponse([NotNull] Receiver receiver, CancellationToken token)
         {
             try
             {
                 using (receiver)
                 {
-                    receiver.ReceiveData();
+                    receiver.ReceiveData(token);
                 }
             }
             catch (Exception)

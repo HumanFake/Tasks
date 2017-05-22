@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Timers;
 using JetBrains.Annotations;
 using NetUtils;
@@ -11,6 +12,11 @@ namespace UdpSelfCounter
 {
     internal sealed class Receiver : Disposable
     {
+        private delegate void SignalHandler(int consoleSignal);
+
+        [DllImport("Kernel32", EntryPoint = "SetConsoleCtrlHandler")]
+        private static extern bool SetSignalHandler(SignalHandler handler, bool addHandler);
+
         private const int RecountTime = 2000;
 
         private readonly object _locker = new object();
@@ -44,7 +50,7 @@ namespace UdpSelfCounter
                     _receiveClient = new UdpClient(0);
                     var ipEndPoint = _receiveClient.Client.LocalEndPoint as IPEndPoint;
                     var currentPort = ipEndPoint?.Port;
-                    Console.WriteLine($"Automatically chousen port: {currentPort}");
+                    Console.WriteLine($"Automatically chosen port: {currentPort}");
                 }
                 catch (Exception ex)
                 {
@@ -55,6 +61,10 @@ namespace UdpSelfCounter
 
             _recountTimer.Elapsed += RecountDuplicates;
             _recountTimer.AutoReset = true;
+
+
+            void Handler(int unused) => StopListen();
+            SetSignalHandler(Handler, true);
         }
 
         internal void Listen()
@@ -88,7 +98,7 @@ namespace UdpSelfCounter
             }
         }
 
-        internal void StopListen()
+        private void StopListen()
         {
             _recountTimer.Stop();
             _sendClient.Send(ProgramData.OutMessage);
