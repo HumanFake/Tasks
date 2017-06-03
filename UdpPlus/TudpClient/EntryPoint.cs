@@ -30,9 +30,8 @@ namespace TudpClient
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
                 #if DEBUG
-                Console.Write(exception.Message);
+                Console.WriteLine(exception.Message);
                 #endif
             }
             Console.Read();

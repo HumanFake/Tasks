@@ -18,7 +18,7 @@ namespace TcpListener
 
         private readonly System.Net.Sockets.TcpListener _server;
         private readonly List<Thread> _threads = new List<Thread>();
-        private readonly CancellationTokenSource CancelTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
 
         internal Server([NotNull] Port port, [NotNull] IPAddress address)
         {
@@ -63,10 +63,15 @@ namespace TcpListener
                     var tcpClient = _server.AcceptTcpClient();
                     var responseClient = new Receiver(tcpClient);
 
-                    var token = CancelTokenSource.Token;
+                    var token = _cancelTokenSource.Token;
                     var clientThread = new Thread(() => GetResponse(responseClient, token));
                     clientThread.Start();
-                    clientThread.Interrupt();
+                    _threads.Add(clientThread);
+
+                    if (0 == _threads.Count % 2)
+                    {
+                        RemoveCompletedTreads();
+                    }
                 }
             }
             catch (SocketException e)
@@ -81,10 +86,22 @@ namespace TcpListener
             }
         }
 
+        private void RemoveCompletedTreads()
+        {
+            for (int i = 0; i < _threads.Count; i++)
+            {
+                if (false == _threads[i].IsAlive)
+                {
+                    _threads.RemoveAt(i);
+                }
+            }
+        }
+
         private void ListenStop()
         {
-            CancelTokenSource.Cancel();
+            _cancelTokenSource.Cancel();
             _server.Stop();
+            RemoveCompletedTreads();
         }
 
         private static void GetResponse([NotNull] Receiver receiver, CancellationToken token)

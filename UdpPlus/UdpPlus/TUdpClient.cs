@@ -50,8 +50,11 @@ namespace UdpPlus
                 var readBytes = stream.Read(buffer, 0, buffer.Length);
 
                 var message = new byte[identifier.Length + readBytes];
-                message.CopyTo(identifier, 0);
-                message.CopyTo(buffer, identifier.Length);
+                identifier.CopyTo(message, 0);
+                for (int i = 0; i < readBytes; i++)
+                {
+                    message[i + identifier.Length] = buffer[i];
+                }
 
                 if (readBytes == 0)
                 {
