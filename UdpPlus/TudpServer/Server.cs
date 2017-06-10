@@ -2,20 +2,23 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Timers;
 using JetBrains.Annotations;
 using NetUtils;
 using UdpPlus;
+using Timer = System.Timers.Timer;
 
 namespace TudpServer
 {
     internal sealed class Server : Disposable
     {
         private const long TimerDelay = 500;
-        
+
         private readonly TudpListener _server;
         private readonly Timer _speedometer = new Timer(TimerDelay);
-        private bool _disposed;
+        private readonly CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
+        private readonly CancellationToken _cancellationToken;
 
         private long _totalReceivedBytesCount;
         private long _lastDisplayedReceivedBytesCount;
@@ -38,19 +41,32 @@ namespace TudpServer
             {
                 throw new ServerException(ex);
             }
+            _cancellationToken = _cancelTokenSource.Token;
+
             _speedometer.Elapsed += DisplayCurrentSpeed;
+        }
+
+        private void SignalHandler(int unused)
+        {
+            StopListen();
         }
 
         internal void Listen()
         {
             try
             {
+                ConsoleActions.SetSignalHandler(SignalHandler, true);
+
                 while (true)
                 {
                     Console.WriteLine("Connection waiting... ");
                     _totalReceivedBytesCount = 0;
                     _lastDisplayedReceivedBytesCount = 0;
-                    var remoteIp = _server.WaitConnection();
+                    var remoteIp = _server.GetConnectionAddressOrNull(_cancellationToken);
+                    if (remoteIp == null)
+                    {
+                        break;
+                    }
                     Console.Out.WriteLine($"{remoteIp} was connected...");
                     try
                     {
@@ -85,10 +101,6 @@ namespace TudpServer
             }
             catch (Exception e)
             {
-                if (_disposed)
-                {
-                    return;
-                }
                 throw new ServerException(e);
             }
             finally
@@ -97,9 +109,9 @@ namespace TudpServer
             }
         }
 
-        internal void StopListen()
+        private void StopListen()
         {
-            FreeManagedResources();
+            _cancelTokenSource.Cancel();
         }
 
         private void DisplayCurrentSpeed([NotNull] object source, [NotNull] ElapsedEventArgs e)
@@ -128,8 +140,7 @@ namespace TudpServer
 
         protected override void FreeManagedResources()
         {
-            _disposed = true;
-            _server.Dispose();
+            //_server.Dispose();
         }
     }
 }

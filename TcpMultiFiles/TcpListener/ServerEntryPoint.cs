@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using JetBrains.Annotations;
 using NetUtils;
 
 namespace TcpListener

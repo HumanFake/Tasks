@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using JetBrains.Annotations;
 using NetUtils;
 
@@ -12,6 +13,7 @@ namespace UdpPlus
         private const int ConnectionMessageCount = 5;
         private readonly UdpClient _udpClient;
         private byte[] _currentIdentifier;
+        private const int ClientReceiveTimeout = 50;
 
         public TudpListener([NotNull]Port port, [NotNull] IPAddress address)
         {
@@ -24,15 +26,38 @@ namespace UdpPlus
                 throw new ArgumentNullException(nameof(address));
             }
             _udpClient = new UdpClient(new IPEndPoint(address, port.AtInt));
+            _udpClient.Client.ReceiveTimeout = ClientReceiveTimeout;
         }
 
-        public IPAddress WaitConnection()
+        public IPAddress GetConnectionAddressOrNull(CancellationToken cancellationToken)
         {
             IPEndPoint remoteIpEndPoint = null;
 
             while (true)
             {
-                var receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
+                byte[] receiveBytes = null;
+                while (false == cancellationToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
+                        if (receiveBytes.Length != 0)
+                        {
+                            break;
+                        }
+                    }
+                    catch (SocketException e)
+                    {
+                        if (e.SocketErrorCode != SocketError.TimedOut)
+                        {
+                            throw new SocketException(e.ErrorCode);
+                        }
+                    }
+                }
+                if (receiveBytes == null)
+                {
+                    return null;
+                }
                 var tudpData = new TudpData(receiveBytes);
                 if (tudpData.IsConnectionMessage())
                 {
@@ -52,8 +77,8 @@ namespace UdpPlus
                 while (true)
                 {
                     IPEndPoint remoteIpEndPoint = null;
-
                     var receiveBytes = _udpClient.Receive(ref remoteIpEndPoint);
+
                     var tudpData = new TudpData(receiveBytes);
                     var receivedDatagramIdentifier = tudpData.GetIdentifier();
 
@@ -85,6 +110,8 @@ namespace UdpPlus
 
         protected override void FreeManagedResources()
         {
+            ThrowIfDisposed();
+            Console.Out.WriteLine("1");
             _udpClient.Close();
         }
     }

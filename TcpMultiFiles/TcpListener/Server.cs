@@ -11,11 +11,6 @@ namespace TcpListener
 {
     internal sealed class Server : Disposable
     {
-        private delegate void SignalHandler(int consoleSignal);
-
-        [DllImport("Kernel32", EntryPoint = "SetConsoleCtrlHandler")]
-        private static extern bool SetSignalHandler(SignalHandler handler, bool addHandler);
-
         private readonly System.Net.Sockets.TcpListener _server;
         private readonly List<Thread> _threads = new List<Thread>();
         private readonly CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
@@ -48,14 +43,19 @@ namespace TcpListener
                     throw new ServerException(e);
                 }
             }
-            void SignalHandler(int unused) => ListenStop();
-            SetSignalHandler(SignalHandler, true);
+        }
+
+        private void SignalHandler(int unused)
+        {
+            ListenStop();
         }
 
         internal void Listen()
         {
             try
             {
+                ConsoleActions.SetSignalHandler(SignalHandler, true);
+
                 _server.Start();
                 while (true)
                 {
@@ -99,6 +99,8 @@ namespace TcpListener
 
         private void ListenStop()
         {
+            ThrowIfDisposed();
+
             _cancelTokenSource.Cancel();
             _server.Stop();
             RemoveCompletedTreads();

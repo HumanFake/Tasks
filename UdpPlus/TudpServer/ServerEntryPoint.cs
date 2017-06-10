@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using NetUtils;
 
 namespace TudpServer
 {
     internal static class ServerEntryPoint
     {
-        private delegate void SignalHandler(int consoleSignal);
-
-        [DllImport("Kernel32", EntryPoint = "SetConsoleCtrlHandler")]
-        private static extern bool SetSignalHandler(SignalHandler handler, bool addHandler);
-
         private static void Main()
         {
             var port = Port.ReadPort();
@@ -23,15 +17,10 @@ namespace TudpServer
                     throw new ArgumentException("local IP noy found");
                 }
                 Console.Clear();
-                var server = new Server(port, address);
-
-                void SignalHandler(int unused)
+                using (var server = new Server(port, address))
                 {
-                    server.StopListen();
+                    server.Listen();
                 }
-                SetSignalHandler(SignalHandler, true);
-
-                server.Listen();
             }
             catch (Exception e)
             {
