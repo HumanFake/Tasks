@@ -10,8 +10,6 @@ namespace NetUtils
     public static class NetIo
     {
         private const string InvalidIp = "Invalid IP.";
-        private const double BytesInMegaBytes = 1024.0;
-        private const double MillisecondsInSecond = 1000.0;
 
         [PublicAPI]
         public static IPAddress ReadAddress()
@@ -105,18 +103,6 @@ namespace NetUtils
                 }
             }
             return null;
-        }
-
-        [PublicAPI]
-        public static double BytesToMegaBytes(this long source)
-        {
-            return source / BytesInMegaBytes / BytesInMegaBytes;
-        }
-
-        [PublicAPI]
-        public static double MillisecondToSecond(this long source)
-        {
-            return source / MillisecondsInSecond;
         }
     }
 }

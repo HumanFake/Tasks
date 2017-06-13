@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Threading;
 using JetBrains.Annotations;
 using NetUtils;
@@ -123,6 +122,7 @@ namespace TcpListener
 
         protected override void FreeManagedResources()
         {
+            _cancelTokenSource.Dispose();
             _server.Stop();
         }
     }
