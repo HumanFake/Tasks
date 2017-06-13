@@ -86,6 +86,7 @@ namespace NetUtils
             return host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
         }
 
+        [PublicAPI]
         [CanBeNull]
         public static IPAddress FindLocalIpAddressOrNull(NetworkInterfaceType _type)
         {

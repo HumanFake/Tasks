@@ -10,6 +10,8 @@ namespace TcpListener
 {
     internal sealed class Server : Disposable
     {
+        private const int FrequencyOfStreamsRemoval = 2;
+
         private readonly System.Net.Sockets.TcpListener _server;
         private readonly List<Thread> _threads = new List<Thread>();
         private readonly CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
@@ -67,7 +69,7 @@ namespace TcpListener
                     clientThread.Start();
                     _threads.Add(clientThread);
 
-                    if (0 == _threads.Count % 2)
+                    if (0 == _threads.Count % FrequencyOfStreamsRemoval)
                     {
                         RemoveCompletedTreads();
                     }
