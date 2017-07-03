@@ -1,0 +1,7 @@
+D:\Tasks\Factory\Model\bin\Debug\Model.dll
+D:\Tasks\Factory\Model\bin\Debug\Model.pdb
+D:\Tasks\Factory\Model\bin\Debug\JetBrains.Annotations.dll
+D:\Tasks\Factory\Model\bin\Debug\JetBrains.Annotations.xml
+D:\Tasks\Factory\Model\obj\Debug\Model.csprojResolveAssemblyReference.cache
+D:\Tasks\Factory\Model\obj\Debug\Model.dll
+D:\Tasks\Factory\Model\obj\Debug\Model.pdb
