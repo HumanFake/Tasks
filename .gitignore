@@ -83,5 +83,7 @@ UdpPlus/.vs/UdpPlus/v15/.suo
 *.suo
 Factory/Factory/obj/*
 Factory/Factory/bin/*
+Factory/Model/obj/*
+Factory/Model/bin/*
 Factory/CliEntryPoint/bin/*
 Factory/CliEntryPoint/obj/*
