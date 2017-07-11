@@ -1,8 +1,0 @@
-D:\Tasks\Factory\CliEntryPoint\bin\Debug\CliEntryPoint.exe.config
-D:\Tasks\Factory\CliEntryPoint\bin\Debug\CliEntryPoint.exe
-D:\Tasks\Factory\CliEntryPoint\bin\Debug\CliEntryPoint.pdb
-D:\Tasks\Factory\CliEntryPoint\bin\Debug\Model.dll
-D:\Tasks\Factory\CliEntryPoint\bin\Debug\Model.pdb
-D:\Tasks\Factory\CliEntryPoint\obj\Debug\CliEntryPoint.csprojResolveAssemblyReference.cache
-D:\Tasks\Factory\CliEntryPoint\obj\Debug\CliEntryPoint.exe
-D:\Tasks\Factory\CliEntryPoint\obj\Debug\CliEntryPoint.pdb
