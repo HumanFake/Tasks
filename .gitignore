@@ -83,5 +83,3 @@ UdpPlus/.vs/UdpPlus/v15/.suo
 *.suo
 Factory/Factory/obj/*
 Factory/Factory/bin/*
-*/obj/*
-*/bin/*

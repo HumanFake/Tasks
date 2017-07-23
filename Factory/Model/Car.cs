@@ -6,12 +6,9 @@ namespace Model
     {
         public string Id { get; }
 
-        public Motor Motor { get; }
-
-        public Car(Motor motor,[NotNull] string id)
+        public Car([NotNull] string id)
         {
             Id = id;
-            Motor = motor;
         }
     }
 }

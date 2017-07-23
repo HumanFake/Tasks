@@ -1,5 +1,4 @@
 ﻿using System.Threading;
-using System;
 
 namespace Model
 {
@@ -10,10 +9,12 @@ namespace Model
         private readonly string _dealerId;
         private CarStorage _storage;
         private readonly object _monitor = new object();
-        
+
+        private int _currentCarId;
+
         public Dealer(CarStorage storage, CancellationToken cancellationToken)
         {
-            _dealerId = Guid.NewGuid().ToString();
+            _dealerId = System.Guid.NewGuid().ToString();
             _storage = storage;
 
             var thread = new Thread(() => { Start(cancellationToken); });
@@ -26,24 +27,17 @@ namespace Model
             {
                 while (false == cancellationToken.IsCancellationRequested)
                 {
-                    RealeseCar();
-                    
-                    var car = _storage.PopCar();
-                    
-                    Console.WriteLine(GenerateCarInforamtion(car));
+                    CreateNewMotor();
+
+                    var motorId = _dealerId + "__" + _currentCarId;
+                    _currentCarId++;
+
+                    _storage.PopCar();
                 }
             }
         }
 
-        private string GenerateCarInforamtion(Car car)
-        {
-            var result = $"{DateTime.Now.ToString()}: Dealer {_dealerId}:" +
-                $" Auto {car.Id} (Body: <ID>, Motor: {car.Motor.Id}, Accessory: <ID>)";
-
-            return result;
-        }
-
-        private static void RealeseCar()
+        private static void CreateNewMotor()
         {
             Thread.Sleep(DefaultReleaseTimeInMillisecond);
         }

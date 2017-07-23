@@ -9,9 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Model</RootNamespace>
     <AssemblyName>Model</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,10 +47,8 @@
     <Compile Include="Body.cs" />
     <Compile Include="Car.cs" />
     <Compile Include="CarStorage.cs" />
-    <Compile Include="CarStorageController.cs" />
     <Compile Include="Dealer.cs" />
     <Compile Include="Fabric.cs" />
-    <Compile Include="FactoryConfigurationParser.cs" />
     <Compile Include="Motor.cs" />
     <Compile Include="MotorStorage.cs" />
     <Compile Include="MotorSupplier.cs" />
