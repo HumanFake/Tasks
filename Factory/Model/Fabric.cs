@@ -1,5 +1,7 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,6 +25,7 @@ namespace Model
 
         public Fabric()
         {
+            var t = FactoryConfigurationParser.Parse();
         }
 
         public void Start()
@@ -39,31 +42,22 @@ namespace Model
                 _motorMotorSuppliers.Add(new MotorSupplier(_motorStorage, _cancellationTokenSource.Token));
             }
 
-            var emulateWork = new Task(() => EmulateWorker(_cancellationTokenSource.Token));
-            emulateWork.Start();
+            _carStorage.StorageChanged += OnStorageChange;
+            RealWork(null);
         }
 
-        private void EmulateWorker(CancellationToken cancellationToken)
+        internal void RealWork(object state)
         {
-            const int maxSleepTime = 2000;
-            const int sleepIteration = 500;
+            var popMotor = _motorStorage.PopMotor();
+            Console.WriteLine(popMotor.Id + " : get from storage");
 
-            var sleepTime = 0;
+            var car = new Car(popMotor, Guid.NewGuid().ToString());
+            _carStorage.AddCar(car);
+        }
 
-            while (false == cancellationToken.IsCancellationRequested)
-            {
-                var popMotor = _motorStorage.PopMotor();
-
-                Console.WriteLine(popMotor.Id + " : get from storage");
-                
-                Thread.Sleep(sleepTime);
-
-                sleepTime += sleepIteration;
-                if (sleepTime > maxSleepTime)
-                {
-                    sleepTime = 0;
-                }
-            }
+        internal void OnStorageChange([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
+        {
+            ThreadPool.QueueUserWorkItem(RealWork);
         }
 
         public void Stop()

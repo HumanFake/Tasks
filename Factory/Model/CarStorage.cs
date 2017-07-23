@@ -1,19 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace Model
 {
     public class CarStorage
     {
         private readonly int _maxCapacity;
-        private readonly List<Car> _cars = new List<Car>();
+        private readonly ObservableCollection<Car> _cars = new ObservableCollection<Car>();
 
         public CarStorage(int maxCapacity)
         {
             _maxCapacity = maxCapacity;
+            _cars.CollectionChanged += OnStorageChange;
+        }
+
+        internal NotifyCollectionChangedEventHandler StorageChanged;
+
+        private void OnStorageChange(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            StorageChanged.Invoke(sender, e);
         }
 
         internal void AddCar([NotNull] Car motor)
