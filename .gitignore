@@ -87,3 +87,5 @@ Factory/Model/obj/*
 Factory/Model/bin/*
 Factory/CliEntryPoint/bin/*
 Factory/CliEntryPoint/obj/*
+*/bin/*
+*/obj/*
