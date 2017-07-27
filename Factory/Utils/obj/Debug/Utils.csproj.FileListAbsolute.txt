@@ -3,3 +3,5 @@ D:\Tasks\Factory\Utils\bin\Debug\Utils.pdb
 D:\Tasks\Factory\Utils\obj\Debug\Utils.csprojResolveAssemblyReference.cache
 D:\Tasks\Factory\Utils\obj\Debug\Utils.dll
 D:\Tasks\Factory\Utils\obj\Debug\Utils.pdb
+D:\Tasks\Factory\Utils\bin\Debug\JetBrains.Annotations.dll
+D:\Tasks\Factory\Utils\bin\Debug\JetBrains.Annotations.xml

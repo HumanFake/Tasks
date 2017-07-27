@@ -3,61 +3,54 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Model
 {
     public class Fabric
     {
-        private const int DefaultWorkerCount = 5;
-        private const int DefaultMotorSupplierCount = 2;
-        private const int DefaultDialerCount = 2;
-
-        private const int DefaultMotorStorageCapacity = 5;
-        private const int DefaultCarStorageCapacity = 10;
-
         private MotorStorage _motorStorage;
         private CarStorage _carStorage;
         private List<MotorSupplier> _motorMotorSuppliers = new List<MotorSupplier>();
         private List<Dealer> _dealers = new List<Dealer>();
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly FactoryConfiguration _factoryConfiguration;
+        private readonly Utils.ThreadPool _threadPool;
 
         public Fabric()
         {
-            var t = FactoryConfigurationParser.Parse();
+            _factoryConfiguration = FactoryConfigurationParser.Parse();
+            _threadPool = new Utils.ThreadPool(_factoryConfiguration.Workers, nameof(Fabric));
         }
 
         public void Start()
         {
-            _motorStorage = new MotorStorage(DefaultMotorStorageCapacity);
-            _carStorage = new CarStorage(DefaultCarStorageCapacity);
+            _motorStorage = new MotorStorage(_factoryConfiguration.MotorStorageCapacity);
+            _carStorage = new CarStorage(_factoryConfiguration.CarStorageCapacity);
 
-            for (int i = 0; i < DefaultDialerCount; i++)
+            for (int i = 0; i < _factoryConfiguration.Dealers; i++)
             {
                 _dealers.Add(new Dealer(_carStorage, _cancellationTokenSource.Token));
             }
-            for (int i = 0; i < DefaultMotorSupplierCount; i++)
-            {
-                _motorMotorSuppliers.Add(new MotorSupplier(_motorStorage, _cancellationTokenSource.Token));
-            }
+
+            _motorMotorSuppliers.Add(new MotorSupplier(_motorStorage, _cancellationTokenSource.Token));
 
             _carStorage.StorageChanged += OnStorageChange;
-            RealWork(null);
+            RealWork();
         }
 
-        internal void RealWork(object state)
+        private void RealWork()
         {
             var popMotor = _motorStorage.PopMotor();
-            Console.WriteLine(popMotor.Id + " : get from storage");
+            Console.WriteLine(popMotor.Id + @" : get from storage");
 
             var car = new Car(popMotor, Guid.NewGuid().ToString());
             _carStorage.AddCar(car);
         }
 
-        internal void OnStorageChange([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
+        private void OnStorageChange([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
         {
-            ThreadPool.QueueUserWorkItem(RealWork);
+            _threadPool.Dispatch(RealWork);
         }
 
         public void Stop()

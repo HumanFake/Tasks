@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 
 namespace Model
 {
     public class MotorStorage
     {
-        private readonly int _maxCapacity;
+        private readonly uint _maxCapacity;
         private readonly List<Motor> _motors = new List<Motor>();
 
-        public MotorStorage(int maxCapacity)
+        public MotorStorage(uint maxCapacity)
         {
             _maxCapacity = maxCapacity;
         }

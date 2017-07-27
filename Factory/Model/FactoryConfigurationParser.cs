@@ -1,90 +1,84 @@
-﻿using System.IO;
-
-namespace Model
+﻿namespace Model
 {
     internal static class FactoryConfigurationParser
     {
-        private const string Path = @"C:\Users\HumanFake\Desktop\Tasks-master\Factory\CliEntryPoint\FactoryConfiguration.txt";
-
         internal static FactoryConfiguration Parse()
         {
             var factoryConfiguration = new FactoryConfiguration();
-            using (var reader = new StreamReader(Path))
-            {
-                while (false == reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var splitedLine = line?.Split('=');
+            var configurationLines = Properties.Resources.FactoryConfiguration.Split('\n');
 
-                    if(splitedLine?.Length != 2)
+            foreach (var line in configurationLines)
+            {
+                var splittedLine = line?.Split('=');
+
+                if (splittedLine?.Length != 2)
+                {
+                    continue;
+                }
+
+                if (splittedLine[0] == "CarStorageCapacity")
+                {
+                    if (false == uint.TryParse(splittedLine[1], out uint carStorageCapacity))
                     {
                         continue;
                     }
-
-                    if(splitedLine[0] == "CarStorageCapacity")
+                    factoryConfiguration.CarStorageCapacity = carStorageCapacity;
+                }
+                if (splittedLine[0] == "MotorStorageCapacity")
+                {
+                    if (false == uint.TryParse(splittedLine[1], out uint motorStorageCapacity))
                     {
-                        if (false == uint.TryParse(splitedLine[1], out uint carStorageCapacity))
-                        {
-                            continue;
-                        }
-                        factoryConfiguration.CarStorageCapacity = carStorageCapacity;
+                        continue;
                     }
-                    if (splitedLine[0] == "MotorStorageCapacity")
+                    factoryConfiguration.MotorStorageCapacity = motorStorageCapacity;
+                }
+                if (splittedLine[0] == "BodyStorageCapacity")
+                {
+                    if (false == uint.TryParse(splittedLine[1], out uint bodyStorageCapacity))
                     {
-                        if (false == uint.TryParse(splitedLine[1], out uint motorStorageCapacity))
-                        {
-                            continue;
-                        }
-                        factoryConfiguration.MotorStorageCapacity = motorStorageCapacity;
+                        continue;
                     }
-                    if (splitedLine[0] == "BodyStorageCapacity")
+                    factoryConfiguration.BodyStorageCapacity = bodyStorageCapacity;
+                }
+                if (splittedLine[0] == "AccessoryStorageCapacity")
+                {
+                    if (false == uint.TryParse(splittedLine[1], out uint accessoryStorageCapacity))
                     {
-                        if (false == uint.TryParse(splitedLine[1], out uint bodyStorageCapacity))
-                        {
-                            continue;
-                        }
-                        factoryConfiguration.BodyStorageCapacity = bodyStorageCapacity;
+                        continue;
                     }
-                    if (splitedLine[0] == "AccessoryStorageCapacity")
+                    factoryConfiguration.AccessoryStorageCapacity = accessoryStorageCapacity;
+                }
+                if (splittedLine[0] == "AccessorySupplier")
+                {
+                    if (false == uint.TryParse(splittedLine[1], out uint accessorySupplier))
                     {
-                        if (false == uint.TryParse(splitedLine[1], out uint accessoryStorageCapacity))
-                        {
-                            continue;
-                        }
-                        factoryConfiguration.AccessoryStorageCapacity = accessoryStorageCapacity;
+                        continue;
                     }
-                    if (splitedLine[0] == "AccessorySupplier")
+                    factoryConfiguration.AccessorySupplier = accessorySupplier;
+                }
+                if (splittedLine[0] == "Workers")
+                {
+                    if (false == uint.TryParse(splittedLine[1], out uint workers))
                     {
-                        if (false == uint.TryParse(splitedLine[1], out uint accessorySupplier))
-                        {
-                            continue;
-                        }
-                        factoryConfiguration.AccessorySupplier = accessorySupplier;
+                        continue;
                     }
-                    if (splitedLine[0] == "Workers")
+                    factoryConfiguration.Workers = workers;
+                }
+                if (splittedLine[0] == "Dealers")
+                {
+                    if (false == uint.TryParse(splittedLine[1], out uint dealers))
                     {
-                        if (false == uint.TryParse(splitedLine[1], out uint workers))
-                        {
-                            continue;
-                        }
-                        factoryConfiguration.Workers = workers;
+                        continue;
                     }
-                    if (splitedLine[0] == "Dealers")
+                    factoryConfiguration.Dealers = dealers;
+                }
+                if (splittedLine[0] == "WriteToLog")
+                {
+                    if (false == bool.TryParse(splittedLine[1], out bool writeToLog))
                     {
-                        if (false == uint.TryParse(splitedLine[1], out uint dealers))
-                        {
-                            continue;
-                        }
-                        factoryConfiguration.Dealers = dealers;
+                        continue;
                     }
-                    if (splitedLine[0] == "WriteToLog")
-                    {
-                        if (false == bool.TryParse(splitedLine[1], out bool writeToLog))
-                        {
-                            continue;
-                        }
-                        factoryConfiguration.WriteToLog = writeToLog;
-                    }
+                    factoryConfiguration.WriteToLog = writeToLog;
                 }
             }
 

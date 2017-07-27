@@ -9,10 +9,10 @@ namespace Model
 {
     public class CarStorage
     {
-        private readonly int _maxCapacity;
+        private readonly uint _maxCapacity;
         private readonly ObservableCollection<Car> _cars = new ObservableCollection<Car>();
 
-        public CarStorage(int maxCapacity)
+        public CarStorage(uint maxCapacity)
         {
             _maxCapacity = maxCapacity;
             _cars.CollectionChanged += OnStorageChange;
@@ -35,7 +35,7 @@ namespace Model
                     Monitor.Wait(_cars);
                 }
 
-                Console.WriteLine(motor.Id + $" : add to CarStorage. Current capacity: {_cars.Count + 1}");
+                Console.WriteLine(motor.Id + $@" : add to CarStorage. Current capacity: {_cars.Count + 1}");
                 _cars.Add(motor);
             }
         }

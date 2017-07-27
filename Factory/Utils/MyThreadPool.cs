@@ -1,80 +1,81 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Concurrent;
 using System.Threading;
+using JetBrains.Annotations;
 
 namespace Utils
 {
-    internal sealed class MyThreadPool : Disposable
+    public sealed class ThreadPool : Disposable
     {
-        private readonly Queue<Action> _actions = new Queue<Action>();
-        private readonly List<Thread> _tasks = new List<Thread>();
-        private readonly object _monitor = new object();
+        private const int MaxQueueSize = 1024 * 1024;
+        private const int JoinTimeoutMilliseconds = 500;
 
-        private bool _interrupted = true;
+        private readonly Thread[] _executors;
+        private readonly BlockingCollection<Action> _tasks;
 
-        internal MyThreadPool(int threadCount)
+        private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();
+
+        public ThreadPool(uint threadCount, [NotNull] string threadPoolName)
         {
-            if (threadCount <= 0)
-            {
-                throw new Exception($"{threadCount} must be greater than zero");
-            }
+            var threadPoolName1 = threadPoolName ?? throw new ArgumentNullException(nameof(threadPoolName));
+
+            _tasks = new BlockingCollection<Action>(MaxQueueSize);
+            _executors = new Thread[threadCount];
+
             for (int i = 0; i < threadCount; i++)
             {
-                _tasks.Add(new Thread(InternalAction));
-                _tasks.First().Start();
+                var thread = new Thread(ThreadLoop) {Name = $"{threadPoolName1} Thread {i}"};
+                thread.Start(_cancellation.Token);
+
+                _executors[i] = thread;
             }
         }
 
-        internal void Execute(Action action)
+        public void Dispatch([NotNull] Action job)
         {
-            if (action == null)
+            ThrowIfDisposed();
+
+            if (job == null)
             {
-                throw new ArgumentNullException(nameof(action));
+                throw new ArgumentNullException(nameof(job));
             }
-            lock (_monitor)
-            {
-                _actions.Enqueue(action);
-                Monitor.PulseAll(_monitor);
-            }
+
+            _tasks.Add(job, _cancellation.Token);
         }
 
-
-        internal void Interrupt()
+        private void ThreadLoop([CanBeNull] object state)
         {
-            _interrupted = true;
+            ThrowIfDisposed();
 
-            lock (_monitor)
-            {
-                Monitor.PulseAll(_monitor);
-            }
-            foreach (var task in _tasks)
-            {
-                task.Join();
-                task.Interrupt();
-            }
-        }
+            var token = state as CancellationToken? ?? CancellationToken.None;
 
-        private void InternalAction()
-        {
-            lock (_monitor)
+            try
             {
-                while (true)
+                while (false == token.IsCancellationRequested)
                 {
-                    while (_actions.Count == 0 && _interrupted == false)
-                    {
-                        Monitor.Wait(_monitor);
-                    }
-                    if (_interrupted)
-                    {
-                        break;
-                    }
-
-                    var action = _actions.Dequeue();
-                    action.Invoke();
+                    _tasks.Take(token).Invoke();
                 }
             }
+            catch (OperationCanceledException)
+            {
+            }
         }
-    }
 
+        protected override void FreeManagedResources()
+        {
+            _cancellation.Cancel();
+
+            foreach (var executor in _executors)
+            {
+                if (false == executor.Join(JoinTimeoutMilliseconds))
+                {
+                    executor.Abort();
+                }
+            }
+
+            _tasks.Dispose();
+            _cancellation.Dispose();
+        }
+
+    }
 }
