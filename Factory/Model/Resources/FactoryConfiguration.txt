@@ -1,8 +1,8 @@
-CarStorageCapacity=100
-MotorStorageCapacity=100
-BodyStorageCapacity=100
-AccessoryStorageCapacity=100
+CarStorageCapacity=5
+MotorStorageCapacity=5
+BodyStorageCapacity=5
+AccessoryStorageCapacity=5
 AccessorySupplier=5
-Workers=10
-Dealers=20
+Workers=2
+Dealers=2
 WriteToLog=true

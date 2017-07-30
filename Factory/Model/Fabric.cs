@@ -42,15 +42,18 @@ namespace Model
         private void RealWork()
         {
             var popMotor = _motorStorage.PopMotor();
-            Console.WriteLine(popMotor.Id + @" : get from storage");
 
             var car = new Car(popMotor, Guid.NewGuid().ToString());
             _carStorage.AddCar(car);
+            Console.WriteLine("new car");
         }
 
         private void OnStorageChange([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
         {
-            _threadPool.Dispatch(RealWork);
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                _threadPool.Dispatch(RealWork);
+            }
         }
 
         public void Stop()

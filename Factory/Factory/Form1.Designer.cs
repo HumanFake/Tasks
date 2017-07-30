@@ -35,8 +35,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.carInProgressText = new System.Windows.Forms.TextBox();
+            this.totalCarsText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
@@ -104,19 +109,6 @@
             this.panel2.Size = new System.Drawing.Size(274, 252);
             this.panel2.TabIndex = 0;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(86, 59);
-            this.label3.Name = "label3";
-            this.label3.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.label3.Size = new System.Drawing.Size(19, 153);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Д\r\nв\r\nи\r\nг\r\nа\r\nт\r\nе\r\nл\r\nи";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -130,11 +122,75 @@
             this.label4.Text = "А\r\nк\r\nс\r\nе\r\nс\r\nс\r\nу\r\nа\r\nр\r\nы";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label3.Location = new System.Drawing.Point(86, 59);
+            this.label3.Name = "label3";
+            this.label3.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label3.Size = new System.Drawing.Size(19, 153);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Д\r\nв\r\nи\r\nг\r\nа\r\nт\r\nе\r\nл\r\nи";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(305, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(156, 13);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Машин в процессе создания:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(305, 56);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(128, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Всего созданно машин:";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(308, 415);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(217, 44);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Старт";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // carInProgressText
+            // 
+            this.carInProgressText.Enabled = false;
+            this.carInProgressText.Location = new System.Drawing.Point(468, 28);
+            this.carInProgressText.Name = "carInProgressText";
+            this.carInProgressText.Size = new System.Drawing.Size(100, 20);
+            this.carInProgressText.TabIndex = 3;
+            this.carInProgressText.Text = "0";
+            // 
+            // totalCarsText
+            // 
+            this.totalCarsText.Enabled = false;
+            this.totalCarsText.Location = new System.Drawing.Point(468, 54);
+            this.totalCarsText.Name = "totalCarsText";
+            this.totalCarsText.Size = new System.Drawing.Size(100, 20);
+            this.totalCarsText.TabIndex = 3;
+            this.totalCarsText.Text = "0";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(588, 471);
+            this.ClientSize = new System.Drawing.Size(823, 471);
+            this.Controls.Add(this.totalCarsText);
+            this.Controls.Add(this.carInProgressText);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
@@ -145,6 +201,7 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -158,6 +215,11 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox carInProgressText;
+        private System.Windows.Forms.TextBox totalCarsText;
     }
 }
 

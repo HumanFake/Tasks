@@ -26,7 +26,7 @@ namespace Model
                     Monitor.Wait(_motors);
                 }
                 
-                Console.WriteLine(motor.Id + $" : add to storage. Current capacity: {_motors.Count + 1}");
+                Console.WriteLine("Motors: " + _motors.Count);
                 _motors.Add(motor);
             }
         }

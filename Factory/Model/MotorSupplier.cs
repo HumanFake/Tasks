@@ -4,7 +4,7 @@ namespace Model
 {
     public sealed class MotorSupplier
     {
-        private const int DefaultSupplyTimeInMillisecond = 3000;
+        private const int DefaultSupplyTimeInMillisecond = 100;
         
         private readonly string _supplierId;
         private readonly object _monitor = new object();
@@ -43,21 +43,6 @@ namespace Model
         private static void CreateNewMotor()
         {
             Thread.Sleep(DefaultSupplyTimeInMillisecond);
-        }
-
-        public void SupplyToStorage(MotorStorage motorStorage)
-        {
-            lock (_monitor)
-            {
-                Monitor.PulseAll(_monitor);
-                if (_motor == null)
-                {
-                    return;
-                }
-
-                motorStorage.AddMotor(_motor);
-                _motor = null;
-            }
         }
     }
 }

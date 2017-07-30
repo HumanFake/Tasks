@@ -35,7 +35,7 @@ namespace Model
                     Monitor.Wait(_cars);
                 }
 
-                Console.WriteLine(motor.Id + $@" : add to CarStorage. Current capacity: {_cars.Count + 1}");
+                Console.WriteLine($@"Current capacity: {_cars.Count + 1}");
                 _cars.Add(motor);
             }
         }

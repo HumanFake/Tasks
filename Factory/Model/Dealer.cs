@@ -27,10 +27,9 @@ namespace Model
                 while (false == cancellationToken.IsCancellationRequested)
                 {
                     RealeseCar();
-                    
+
+                    Console.WriteLine("Need car");
                     var car = _storage.PopCar();
-                    
-                    Console.WriteLine(GenerateCarInforamtion(car));
                 }
             }
         }
