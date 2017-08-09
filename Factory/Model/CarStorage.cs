@@ -1,62 +1,51 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using JetBrains.Annotations;
-using System.Collections.ObjectModel;
+﻿using JetBrains.Annotations;
 using System.Collections.Specialized;
 
 namespace Model
 {
     public class CarStorage
     {
-        private readonly uint _maxCapacity;
-        private readonly ObservableCollection<Car> _cars = new ObservableCollection<Car>();
+        private readonly Storage<Car> _storage;
 
         public CarStorage(uint maxCapacity)
         {
-            _maxCapacity = maxCapacity;
-            _cars.CollectionChanged += OnStorageChange;
+            _storage = new Storage<Car>(maxCapacity);
         }
 
-        internal NotifyCollectionChangedEventHandler StorageChanged;
+        internal NotifyStorageChanged StorageChanged;
 
-        private void OnStorageChange(object sender, NotifyCollectionChangedEventArgs e)
+        internal void AddCar([NotNull] Car car)
         {
-            StorageChanged.Invoke(sender, e);
-        }
-
-        internal void AddCar([NotNull] Car motor)
-        {
-            lock (_cars)
-            {
-                Monitor.PulseAll(_cars);
-                while (_cars.Count >= _maxCapacity)
-                {
-                    Monitor.Wait(_cars);
-                }
-
-                Console.WriteLine($@"Current capacity: {_cars.Count + 1}");
-                _cars.Add(motor);
-            }
+            _storage.Add(car);
+            NotifyAboutAdding();
         }
 
         public Car PopCar()
         {
-            lock (_cars)
-            {
-                Monitor.PulseAll(_cars);
-                while (_cars.Count == 0)
-                {
-                    Monitor.Wait(_cars);
-                }
+            var car = _storage.Pop();
+            NotifyAboutRemoving();
 
-                var result = _cars.First();
-                _cars.Remove(result);
-
-                return result;
-            }
+            return car;
         }
 
-        private int Capacity => _cars.Count;
+        private void NotifyAboutAdding()
+        {
+            StorageChanged?.Invoke(NotifyStorageChangedAction.Add);
+        }
+
+        private void NotifyAboutRemoving()
+        {
+            StorageChanged?.Invoke(NotifyStorageChangedAction.Remove);
+        }
+
+        public int Capacity => _storage.Capacity;
+    }
+
+    public delegate void NotifyStorageChanged(NotifyStorageChangedAction action);
+
+    public enum NotifyStorageChangedAction
+    {
+        Add,
+        Remove
     }
 }

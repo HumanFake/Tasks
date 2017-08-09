@@ -17,14 +17,17 @@ namespace Utils
 
         public ThreadPool(uint threadCount, [NotNull] string threadPoolName)
         {
-            var threadPoolName1 = threadPoolName ?? throw new ArgumentNullException(nameof(threadPoolName));
+            if (threadPoolName == null)
+            {
+                throw new ArgumentNullException(nameof(threadPoolName));
+            }
 
             _tasks = new BlockingCollection<Action>(MaxQueueSize);
             _executors = new Thread[threadCount];
 
             for (int i = 0; i < threadCount; i++)
             {
-                var thread = new Thread(ThreadLoop) {Name = $"{threadPoolName1} Thread {i}"};
+                var thread = new Thread(ThreadLoop) {Name = $"{threadPoolName} Thread {i}"};
                 thread.Start(_cancellation.Token);
 
                 _executors[i] = thread;

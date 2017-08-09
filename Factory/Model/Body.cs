@@ -1,10 +1,10 @@
 ﻿namespace Model
 {
-    public sealed class Body
+    public sealed class Body : IProduct
     {
-        public long Id { get; }
+        public string Id { get; }
 
-        public Body(long id)
+        public Body(string id)
         {
             Id = id;
         }

@@ -2,7 +2,7 @@
 
 namespace Model
 {
-    public class Motor
+    public class Motor : IProduct
     {
         public string Id { get; }
 

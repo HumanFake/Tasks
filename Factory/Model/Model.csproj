@@ -47,20 +47,21 @@
     <Compile Include="Accessor.cs" />
     <Compile Include="Body.cs" />
     <Compile Include="Car.cs" />
+    <Compile Include="IProduct.cs" />
     <Compile Include="CarStorage.cs" />
     <Compile Include="CarStorageController.cs" />
     <Compile Include="Dealer.cs" />
     <Compile Include="Fabric.cs" />
     <Compile Include="FactoryConfigurationParser.cs" />
     <Compile Include="Motor.cs" />
-    <Compile Include="MotorStorage.cs" />
-    <Compile Include="MotorSupplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Storage.cs" />
+    <Compile Include="Supplier.cs" />
     <Compile Include="Worker.cs" />
   </ItemGroup>
   <ItemGroup>

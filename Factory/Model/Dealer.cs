@@ -8,7 +8,7 @@ namespace Model
         private const int DefaultReleaseTimeInMillisecond = 3000;
 
         private readonly string _dealerId;
-        private CarStorage _storage;
+        private readonly CarStorage _storage;
         private readonly object _monitor = new object();
         
         public Dealer(CarStorage storage, CancellationToken cancellationToken)
