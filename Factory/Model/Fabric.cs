@@ -13,6 +13,7 @@ namespace Model
         private readonly List<Dealer> _dealers = new List<Dealer>();
         private readonly FactoryConfiguration _factoryConfiguration;
         private readonly Utils.ThreadPool _threadPool;
+        private readonly CarStorageController _storageController;
 
         private Storage<Motor> _motorStorage;
         private Supplier<Motor> _motorSupplier;
@@ -27,27 +28,33 @@ namespace Model
 
             _factoryConfiguration = FactoryConfigurationParser.Parse();
             _threadPool = new Utils.ThreadPool(_factoryConfiguration.Workers, nameof(Fabric));
+
+            _motorStorage = new Storage<Motor>(_factoryConfiguration.MotorStorageCapacity, _observer);
+            _bodyStorage = new Storage<Body>(_factoryConfiguration.BodyStorageCapacity, _observer);
+            _carStorage = new CarStorage(_factoryConfiguration.CarStorageCapacity, _observer);
+
+            _storageController = new CarStorageController(this, _carStorage);
         }
 
         public void Start()
         {
-            _motorStorage = new Storage<Motor>(_factoryConfiguration.MotorStorageCapacity, _observer);
             _motorSupplier = new Supplier<Motor>(_motorStorage, _cancellationTokenSource.Token);
             _motorSupplier.SetSupplyTime(200);
 
-            _bodyStorage = new Storage<Body>(_factoryConfiguration.BodyStorageCapacity, _observer);
             _bodySupplier = new Supplier<Body>(_bodyStorage, _cancellationTokenSource.Token);
             _bodySupplier.SetSupplyTime(500);
-
-            _carStorage = new CarStorage(_factoryConfiguration.CarStorageCapacity, _observer);
 
             for (int i = 0; i < _factoryConfiguration.Dealers; i++)
             {
                 _dealers.Add(new Dealer(_carStorage, _cancellationTokenSource.Token));
             }
 
-            _carStorage.StorageChanged += OnStorageChange;
-            RealWork();
+            CreateNewCar();
+        }
+
+        public int CarsInStorage()
+        {
+            return _carStorage.Capacity;
         }
 
         public Storage<Motor> GetMotorStorage()
@@ -80,14 +87,11 @@ namespace Model
             Console.WriteLine(@"new car");
         }
 
-        private void OnStorageChange(NotifyStorageChangedAction action)
+        internal void CreateNewCar()
         {
-            if (action == NotifyStorageChangedAction.Remove)
-            {
-                _threadPool.Dispatch(RealWork);
-            }
+            _threadPool.Dispatch(RealWork);
         }
-
+        
         public void Stop()
         {
             _cancellationTokenSource.Cancel();

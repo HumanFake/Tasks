@@ -42,6 +42,8 @@ namespace Factory
 
             SetTextBox(totalBodyCountText, _fabric.GetBodyStorage().ProductsInStorageForAllTime.ToString());
             SetTextBox(totalMotorCountText, _fabric.GetMotorStorage().ProductsInStorageForAllTime.ToString());
+
+            SetTextBox(carsInStorageText, _fabric.CarsInStorage().ToString());
         }
 
         private void SetTextBox(Control target, string text)

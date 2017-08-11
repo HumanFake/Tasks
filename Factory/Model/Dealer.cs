@@ -5,7 +5,7 @@ namespace Model
 {
     public class Dealer
     {
-        private const int DefaultReleaseTimeInMillisecond = 3000;
+        private const int DefaultReleaseTimeInMillisecond = 1000;
 
         private readonly string _dealerId;
         private readonly CarStorage _storage;

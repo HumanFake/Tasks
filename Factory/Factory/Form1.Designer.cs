@@ -35,6 +35,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.accessoriesSupplyTimeText = new System.Windows.Forms.TextBox();
+            this.motorSupplyTimeText = new System.Windows.Forms.TextBox();
+            this.bodySupplyTimeText = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -60,9 +63,8 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.bodySupplyTimeText = new System.Windows.Forms.TextBox();
-            this.motorSupplyTimeText = new System.Windows.Forms.TextBox();
-            this.accessoriesSupplyTimeText = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.carsInStorageText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.bodyCreatTimeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.motorCreatTimeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
@@ -143,6 +145,39 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(274, 252);
             this.panel2.TabIndex = 0;
+            // 
+            // accessoriesSupplyTimeText
+            // 
+            this.accessoriesSupplyTimeText.Enabled = false;
+            this.accessoriesSupplyTimeText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.accessoriesSupplyTimeText.Location = new System.Drawing.Point(216, 223);
+            this.accessoriesSupplyTimeText.Name = "accessoriesSupplyTimeText";
+            this.accessoriesSupplyTimeText.ReadOnly = true;
+            this.accessoriesSupplyTimeText.Size = new System.Drawing.Size(40, 20);
+            this.accessoriesSupplyTimeText.TabIndex = 2;
+            this.accessoriesSupplyTimeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // motorSupplyTimeText
+            // 
+            this.motorSupplyTimeText.Enabled = false;
+            this.motorSupplyTimeText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.motorSupplyTimeText.Location = new System.Drawing.Point(122, 224);
+            this.motorSupplyTimeText.Name = "motorSupplyTimeText";
+            this.motorSupplyTimeText.ReadOnly = true;
+            this.motorSupplyTimeText.Size = new System.Drawing.Size(40, 20);
+            this.motorSupplyTimeText.TabIndex = 2;
+            this.motorSupplyTimeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // bodySupplyTimeText
+            // 
+            this.bodySupplyTimeText.Enabled = false;
+            this.bodySupplyTimeText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bodySupplyTimeText.Location = new System.Drawing.Point(29, 224);
+            this.bodySupplyTimeText.Name = "bodySupplyTimeText";
+            this.bodySupplyTimeText.ReadOnly = true;
+            this.bodySupplyTimeText.Size = new System.Drawing.Size(40, 20);
+            this.bodySupplyTimeText.TabIndex = 2;
+            this.bodySupplyTimeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label4
             // 
@@ -378,38 +413,23 @@
             this.label15.TabIndex = 0;
             this.label15.Text = "На складе:";
             // 
-            // bodySupplyTimeText
+            // label16
             // 
-            this.bodySupplyTimeText.Enabled = false;
-            this.bodySupplyTimeText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bodySupplyTimeText.Location = new System.Drawing.Point(29, 224);
-            this.bodySupplyTimeText.Name = "bodySupplyTimeText";
-            this.bodySupplyTimeText.ReadOnly = true;
-            this.bodySupplyTimeText.Size = new System.Drawing.Size(40, 20);
-            this.bodySupplyTimeText.TabIndex = 2;
-            this.bodySupplyTimeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(23, 342);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(99, 13);
+            this.label16.TabIndex = 1;
+            this.label16.Text = "Машин на складе:";
             // 
-            // motorSupplyTimeText
+            // carsInStorageText
             // 
-            this.motorSupplyTimeText.Enabled = false;
-            this.motorSupplyTimeText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.motorSupplyTimeText.Location = new System.Drawing.Point(122, 224);
-            this.motorSupplyTimeText.Name = "motorSupplyTimeText";
-            this.motorSupplyTimeText.ReadOnly = true;
-            this.motorSupplyTimeText.Size = new System.Drawing.Size(40, 20);
-            this.motorSupplyTimeText.TabIndex = 2;
-            this.motorSupplyTimeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // accessoriesSupplyTimeText
-            // 
-            this.accessoriesSupplyTimeText.Enabled = false;
-            this.accessoriesSupplyTimeText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.accessoriesSupplyTimeText.Location = new System.Drawing.Point(216, 223);
-            this.accessoriesSupplyTimeText.Name = "accessoriesSupplyTimeText";
-            this.accessoriesSupplyTimeText.ReadOnly = true;
-            this.accessoriesSupplyTimeText.Size = new System.Drawing.Size(40, 20);
-            this.accessoriesSupplyTimeText.TabIndex = 2;
-            this.accessoriesSupplyTimeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.carsInStorageText.Enabled = false;
+            this.carsInStorageText.Location = new System.Drawing.Point(186, 342);
+            this.carsInStorageText.Name = "carsInStorageText";
+            this.carsInStorageText.Size = new System.Drawing.Size(100, 20);
+            this.carsInStorageText.TabIndex = 3;
+            this.carsInStorageText.Text = "0";
             // 
             // MainForm
             // 
@@ -420,8 +440,10 @@
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.totalCarsText);
+            this.Controls.Add(this.carsInStorageText);
             this.Controls.Add(this.carInProgressText);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.label16);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
@@ -481,6 +503,8 @@
         private System.Windows.Forms.TextBox bodySupplyTimeText;
         private System.Windows.Forms.TextBox accessoriesSupplyTimeText;
         private System.Windows.Forms.TextBox motorSupplyTimeText;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox carsInStorageText;
     }
 }
 

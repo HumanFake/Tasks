@@ -10,8 +10,12 @@ namespace Model
 
         public CarStorage(uint maxCapacity, IStorageObserver observer)
         {
+            MaxCapacity = maxCapacity;
             _storage = new Storage<Car>(maxCapacity, observer);
         }
+
+        public int Capacity => _storage.Capacity;
+        internal uint MaxCapacity { get; }
 
         internal NotifyStorageChanged StorageChanged;
 
@@ -38,15 +42,7 @@ namespace Model
         {
             StorageChanged?.Invoke(NotifyStorageChangedAction.Remove);
         }
-
-        public int Capacity => _storage.Capacity;
     }
 
     public delegate void NotifyStorageChanged(NotifyStorageChangedAction action);
-
-    public enum NotifyStorageChangedAction
-    {
-        Add,
-        Remove
-    }
 }
