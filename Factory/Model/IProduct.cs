@@ -1,6 +1,6 @@
 ﻿namespace Model
 {
-    internal interface IProduct
+    public interface IProduct
     {
         string Id { get; }
     }

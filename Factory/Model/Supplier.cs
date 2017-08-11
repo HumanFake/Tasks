@@ -35,7 +35,11 @@ namespace Model
             {
                 while (false == cancellationToken.IsCancellationRequested)
                 {
-                    _product = CreateNewProduct(); 
+                    _product = CreateNewProduct();
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
                     _storage.Add(_product);
                 }

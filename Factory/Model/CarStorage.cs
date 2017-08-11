@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using System.Collections.Specialized;
+using Model.Observers;
 
 namespace Model
 {
@@ -7,9 +8,9 @@ namespace Model
     {
         private readonly Storage<Car> _storage;
 
-        public CarStorage(uint maxCapacity)
+        public CarStorage(uint maxCapacity, IStorageObserver observer)
         {
-            _storage = new Storage<Car>(maxCapacity);
+            _storage = new Storage<Car>(maxCapacity, observer);
         }
 
         internal NotifyStorageChanged StorageChanged;

@@ -27,6 +27,10 @@ namespace Model
                 while (false == cancellationToken.IsCancellationRequested)
                 {
                     RealeseCar();
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
                     Console.WriteLine("Need car");
                     var car = _storage.PopCar();
