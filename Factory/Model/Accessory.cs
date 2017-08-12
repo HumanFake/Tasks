@@ -1,10 +1,10 @@
 ﻿namespace Model
 {
-    public class Accessor: IProduct
+    public class Accessory: IProduct
     {
         public string Id { get; }
 
-        public Accessor(string id)
+        public Accessory(string id)
         {
             Id = id;
         }

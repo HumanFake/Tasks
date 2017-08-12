@@ -14,7 +14,7 @@ namespace Model
             _storage = new Storage<Car>(maxCapacity, observer);
         }
 
-        public int Capacity => _storage.Capacity;
+        public int Capacity => _storage.InStock;
         internal uint MaxCapacity { get; }
 
         internal NotifyStorageChanged StorageChanged;

@@ -8,12 +8,14 @@ namespace Model
 
         public Motor Motor { get; }
         public Body Body { get; }
+        public Accessory Accessory { get; }
 
-        public Car(Motor motor, Body body, [NotNull] string id)
+        public Car([NotNull] Motor motor, [NotNull]  Body body, [NotNull]  Accessory accessory, [NotNull] string id)
         {
             Id = id;
             Motor = motor;
             Body = body;
+            Accessory = accessory;
         }
     }
 }

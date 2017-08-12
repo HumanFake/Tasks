@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
+using JetBrains.Annotations;
 
 namespace Model
 {
     internal class Supplier<T> where T : IProduct
     {
-        private const uint DefaultSupplyTimeInMillisecond = 100;
+        private const uint DefaultSupplyTimeInMillisecond = 200;
 
         private readonly string _supplierId;
         private readonly object _monitor = new object();
@@ -15,7 +16,7 @@ namespace Model
         private int _currentProductId;
         private T _product;
 
-        public Supplier(Storage<T> storage, CancellationToken cancellationToken)
+        public Supplier([NotNull] Storage<T> storage, CancellationToken cancellationToken)
         {
             _supplierId = Guid.NewGuid().ToString();
             _storage = storage;
@@ -29,7 +30,7 @@ namespace Model
             _supplyTimeInMillisecond = supplyTime;
         }
 
-        private void Start(CancellationToken cancellationToken)
+        private void Start (CancellationToken cancellationToken)
         {
             lock (_monitor)
             {

@@ -5,12 +5,14 @@ namespace Model
 {
     public class Dealer
     {
-        private const int DefaultReleaseTimeInMillisecond = 1000;
+        private const int DefaultReleaseTimeInMillisecond = 2000;
 
         private readonly string _dealerId;
         private readonly CarStorage _storage;
         private readonly object _monitor = new object();
-        
+
+        private uint _releaseTimeInMillisecond = DefaultReleaseTimeInMillisecond;
+
         public Dealer(CarStorage storage, CancellationToken cancellationToken)
         {
             _dealerId = Guid.NewGuid().ToString();
@@ -18,6 +20,11 @@ namespace Model
 
             var thread = new Thread(() => { Start(cancellationToken); });
             thread.Start();
+        }
+
+        internal void SetReleaseTimeInMillisecond(uint time)
+        {
+            _releaseTimeInMillisecond = time;
         }
 
         private void Start(CancellationToken cancellationToken)
@@ -32,23 +39,23 @@ namespace Model
                         return;
                     }
 
-                    Console.WriteLine("Need car");
                     var car = _storage.PopCar();
+                    Console.WriteLine(GenerateCarInforamtion(car));
                 }
             }
         }
 
         private string GenerateCarInforamtion(Car car)
         {
-            var result = $"{DateTime.Now.ToString()}: Dealer {_dealerId}:" +
-                $" Auto {car.Id} (Body: <ID>, Motor: {car.Motor.Id}, Accessory: <ID>)";
+            var result = $"{DateTime.Now}: Dealer {_dealerId}:" +
+                $" Auto {car.Id} (Body: <{car.Body.Id}>, Motor: {car.Motor.Id}, Accessory: <ID>)";
 
             return result;
         }
 
-        private static void RealeseCar()
+        private void RealeseCar()
         {
-            Thread.Sleep(DefaultReleaseTimeInMillisecond);
+            Thread.Sleep((int) _releaseTimeInMillisecond);
         }
     }
 }

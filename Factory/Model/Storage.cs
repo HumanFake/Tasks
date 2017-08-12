@@ -15,7 +15,7 @@ namespace Model
 
         private int _totalProductsWasInStorag = 0;
 
-        public Storage(uint maxCapacity, IStorageObserver observer)
+        public Storage(uint maxCapacity, [NotNull] IStorageObserver observer)
         {
             _maxCapacity = maxCapacity;
             _observer = observer;
@@ -58,6 +58,6 @@ namespace Model
         }
 
         public int ProductsInStorageForAllTime => _totalProductsWasInStorag;
-        public int Capacity => _products.Count;
+        public int InStock => _products.Count;
     }
 }

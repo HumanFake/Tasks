@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.bodyCreatTimeTrackBar = new System.Windows.Forms.TrackBar();
             this.motorCreatTimeTrackBar = new System.Windows.Forms.TrackBar();
-            this.trackBar4 = new System.Windows.Forms.TrackBar();
+            this.accessoryCreatTimeTrackBar = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -58,8 +58,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.currentAccessoryCountText = new System.Windows.Forms.TextBox();
+            this.totalAccessoryCountText = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
@@ -67,7 +67,7 @@
             this.carsInStorageText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.bodyCreatTimeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.motorCreatTimeTrackBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.accessoryCreatTimeTrackBar)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -96,15 +96,16 @@
             this.motorCreatTimeTrackBar.Value = 1;
             this.motorCreatTimeTrackBar.ValueChanged += new System.EventHandler(this.motorCreatTimeTrackBar_ValueChanged);
             // 
-            // trackBar4
+            // accessoryCreatTimeTrackBar
             // 
-            this.trackBar4.Location = new System.Drawing.Point(216, 44);
-            this.trackBar4.Minimum = 1;
-            this.trackBar4.Name = "trackBar4";
-            this.trackBar4.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.trackBar4.Size = new System.Drawing.Size(45, 176);
-            this.trackBar4.TabIndex = 0;
-            this.trackBar4.Value = 1;
+            this.accessoryCreatTimeTrackBar.Location = new System.Drawing.Point(216, 44);
+            this.accessoryCreatTimeTrackBar.Minimum = 1;
+            this.accessoryCreatTimeTrackBar.Name = "accessoryCreatTimeTrackBar";
+            this.accessoryCreatTimeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.accessoryCreatTimeTrackBar.Size = new System.Drawing.Size(45, 176);
+            this.accessoryCreatTimeTrackBar.TabIndex = 0;
+            this.accessoryCreatTimeTrackBar.Value = 1;
+            this.accessoryCreatTimeTrackBar.ValueChanged += new System.EventHandler(this.accessoryCreatTimeTrackBar_ValueChanged);
             // 
             // label1
             // 
@@ -138,7 +139,7 @@
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.trackBar4);
+            this.panel2.Controls.Add(this.accessoryCreatTimeTrackBar);
             this.panel2.Controls.Add(this.motorCreatTimeTrackBar);
             this.panel2.Controls.Add(this.bodyCreatTimeTrackBar);
             this.panel2.Location = new System.Drawing.Point(12, 12);
@@ -197,12 +198,12 @@
             this.label3.AutoSize = true;
             this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(86, 59);
+            this.label3.Location = new System.Drawing.Point(91, 84);
             this.label3.Name = "label3";
             this.label3.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.label3.Size = new System.Drawing.Size(19, 153);
+            this.label3.Size = new System.Drawing.Size(19, 102);
             this.label3.TabIndex = 1;
-            this.label3.Text = "Д\r\nв\r\nи\r\nг\r\nа\r\nт\r\nе\r\nл\r\nи";
+            this.label3.Text = "М\r\nо\r\nт\r\nо\r\nр\r\nы";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label5
@@ -225,7 +226,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(170, 399);
+            this.button1.Location = new System.Drawing.Point(312, 415);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(217, 44);
             this.button1.TabIndex = 2;
@@ -361,8 +362,8 @@
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.textBox3);
-            this.panel4.Controls.Add(this.textBox4);
+            this.panel4.Controls.Add(this.currentAccessoryCountText);
+            this.panel4.Controls.Add(this.totalAccessoryCountText);
             this.panel4.Controls.Add(this.label13);
             this.panel4.Controls.Add(this.label14);
             this.panel4.Controls.Add(this.label15);
@@ -371,19 +372,19 @@
             this.panel4.Size = new System.Drawing.Size(200, 100);
             this.panel4.TabIndex = 4;
             // 
-            // textBox3
+            // currentAccessoryCountText
             // 
-            this.textBox3.Location = new System.Drawing.Point(101, 62);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(84, 20);
-            this.textBox3.TabIndex = 2;
+            this.currentAccessoryCountText.Location = new System.Drawing.Point(101, 62);
+            this.currentAccessoryCountText.Name = "currentAccessoryCountText";
+            this.currentAccessoryCountText.Size = new System.Drawing.Size(84, 20);
+            this.currentAccessoryCountText.TabIndex = 2;
             // 
-            // textBox4
+            // totalAccessoryCountText
             // 
-            this.textBox4.Location = new System.Drawing.Point(101, 36);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(84, 20);
-            this.textBox4.TabIndex = 2;
+            this.totalAccessoryCountText.Location = new System.Drawing.Point(101, 36);
+            this.totalAccessoryCountText.Name = "totalAccessoryCountText";
+            this.totalAccessoryCountText.Size = new System.Drawing.Size(84, 20);
+            this.totalAccessoryCountText.TabIndex = 2;
             // 
             // label13
             // 
@@ -453,7 +454,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.bodyCreatTimeTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.motorCreatTimeTrackBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.accessoryCreatTimeTrackBar)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -471,7 +472,7 @@
 
         private System.Windows.Forms.TrackBar bodyCreatTimeTrackBar;
         private System.Windows.Forms.TrackBar motorCreatTimeTrackBar;
-        private System.Windows.Forms.TrackBar trackBar4;
+        private System.Windows.Forms.TrackBar accessoryCreatTimeTrackBar;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel2;
@@ -495,8 +496,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox currentAccessoryCountText;
+        private System.Windows.Forms.TextBox totalAccessoryCountText;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;

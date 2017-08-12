@@ -14,13 +14,15 @@ namespace Model
         private readonly FactoryConfiguration _factoryConfiguration;
         private readonly Utils.ThreadPool _threadPool;
         private readonly CarStorageController _storageController;
+        private readonly Storage<Motor> _motorStorage;
+        private readonly Storage<Body> _bodyStorage;
+        private readonly Storage<Accessory> _accessorStorage;
+        private readonly CarStorage _carStorage;
 
-        private Storage<Motor> _motorStorage;
+        private List<Supplier<Accessory>> _accessorSuppliers = new List<Supplier<Accessory>>();
+
         private Supplier<Motor> _motorSupplier;
-        private Storage<Body> _bodyStorage;
         private Supplier<Body> _bodySupplier;
-
-        private CarStorage _carStorage;
 
         public Fabric(IStorageObserver observer)
         {
@@ -32,6 +34,7 @@ namespace Model
             _motorStorage = new Storage<Motor>(_factoryConfiguration.MotorStorageCapacity, _observer);
             _bodyStorage = new Storage<Body>(_factoryConfiguration.BodyStorageCapacity, _observer);
             _carStorage = new CarStorage(_factoryConfiguration.CarStorageCapacity, _observer);
+            _accessorStorage = new Storage<Accessory>(_factoryConfiguration.AccessoryStorageCapacity, _observer);
 
             _storageController = new CarStorageController(this, _carStorage);
         }
@@ -39,10 +42,14 @@ namespace Model
         public void Start()
         {
             _motorSupplier = new Supplier<Motor>(_motorStorage, _cancellationTokenSource.Token);
-            _motorSupplier.SetSupplyTime(200);
 
             _bodySupplier = new Supplier<Body>(_bodyStorage, _cancellationTokenSource.Token);
-            _bodySupplier.SetSupplyTime(500);
+
+            for (int i = 0; i < _factoryConfiguration.AccessorySupplier; i++)
+            {
+                var accessorSupplier = new Supplier<Accessory>(_accessorStorage, _cancellationTokenSource.Token);
+                _accessorSuppliers.Add(accessorSupplier);
+            }
 
             for (int i = 0; i < _factoryConfiguration.Dealers; i++)
             {
@@ -57,14 +64,22 @@ namespace Model
             return _carStorage.Capacity;
         }
 
-        public Storage<Motor> GetMotorStorage()
+        public StorageState GetMotorStorageSate()
         {
-            return _motorStorage;
+            var state = new StorageState(_motorStorage.InStock, _motorStorage.ProductsInStorageForAllTime);
+            return state;
         }
 
-        public Storage<Body> GetBodyStorage()
+        public StorageState GetBodyStorageState()
         {
-            return _bodyStorage;
+            var state = new StorageState(_bodyStorage.InStock, _bodyStorage.ProductsInStorageForAllTime);
+            return state;
+        }
+
+        public StorageState GetAccessoryStorageState()
+        {
+            var state = new StorageState(_accessorStorage.InStock, _accessorStorage.ProductsInStorageForAllTime);
+            return state;
         }
 
         public void SetMotorSupplyTime(uint time)
@@ -77,14 +92,22 @@ namespace Model
             _bodySupplier.SetSupplyTime(time);
         }
 
+        public void SetAccesserySupplyTime(uint time)
+        {
+            foreach (var accessorSupplier in _accessorSuppliers)
+            {
+                accessorSupplier.SetSupplyTime(time);
+            }
+        }
+
         private void RealWork()
         {
             var motor = _motorStorage.Pop();
             var body = _bodyStorage.Pop();
+            var accessory = _accessorStorage.Pop();
 
-            var car = new Car(motor, body, Guid.NewGuid().ToString());
+            var car = new Car(motor, body, accessory, Guid.NewGuid().ToString());
             _carStorage.AddCar(car);
-            Console.WriteLine(@"new car");
         }
 
         internal void CreateNewCar()

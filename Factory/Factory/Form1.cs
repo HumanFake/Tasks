@@ -22,6 +22,7 @@ namespace Factory
 
             bodySupplyTimeText.Text = MinimalSuplyTime.ToString();
             motorSupplyTimeText.Text = MinimalSuplyTime.ToString();
+            accessoriesSupplyTimeText.Text = MinimalSuplyTime.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -37,11 +38,17 @@ namespace Factory
 
         private void UpdateFabricState()
         {
-            SetTextBox(currentBodyCountText, _fabric.GetBodyStorage().Capacity.ToString());
-            SetTextBox(currentMotorCountText, _fabric.GetMotorStorage().Capacity.ToString());
+            var bodyStorageState = _fabric.GetBodyStorageState();
+            var motorStorageState = _fabric.GetMotorStorageSate();
+            var accessoryStorageState = _fabric.GetAccessoryStorageState();
 
-            SetTextBox(totalBodyCountText, _fabric.GetBodyStorage().ProductsInStorageForAllTime.ToString());
-            SetTextBox(totalMotorCountText, _fabric.GetMotorStorage().ProductsInStorageForAllTime.ToString());
+            SetTextBox(currentBodyCountText, bodyStorageState.InStock.ToString());
+            SetTextBox(currentMotorCountText, motorStorageState.InStock.ToString());
+            SetTextBox(currentAccessoryCountText, accessoryStorageState.InStock.ToString());
+
+            SetTextBox(totalBodyCountText, bodyStorageState.ForAllTime.ToString());
+            SetTextBox(totalMotorCountText, motorStorageState.ForAllTime.ToString());
+            SetTextBox(totalAccessoryCountText, accessoryStorageState.ForAllTime.ToString());
 
             SetTextBox(carsInStorageText, _fabric.CarsInStorage().ToString());
         }
@@ -70,7 +77,7 @@ namespace Factory
             }
 
             bodySupplyTimeText.Text = supplyTime.ToString();
-            _fabricController.SetMotorSupplyTime(Convert.ToUInt32(supplyTime));
+            _fabricController.SetBodySupplyTime(Convert.ToUInt32(supplyTime));
         }
 
         private void motorCreatTimeTrackBar_ValueChanged(object sender, EventArgs e)
@@ -82,7 +89,19 @@ namespace Factory
             }
 
             motorSupplyTimeText.Text = supplyTime.ToString();
-            _fabricController.SetBodySupplyTime(Convert.ToUInt32(supplyTime));
+            _fabricController.SetMotorSupplyTime(Convert.ToUInt32(supplyTime));
+        }
+
+        private void accessoryCreatTimeTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            var supplyTime = TryGetSupplyTime(accessoryCreatTimeTrackBar);
+            if (supplyTime == null)
+            {
+                return;
+            }
+
+            accessoriesSupplyTimeText.Text = supplyTime.ToString();
+            _fabricController.SetAccessorySupplyTime(Convert.ToUInt32(supplyTime));
         }
 
         private uint? TryGetSupplyTime(TrackBar trackBar)

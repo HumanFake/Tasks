@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accessor.cs" />
+    <Compile Include="Accessory.cs" />
     <Compile Include="Body.cs" />
     <Compile Include="Car.cs" />
     <Compile Include="IProduct.cs" />
@@ -63,6 +63,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Storage.cs" />
+    <Compile Include="StorageState.cs" />
     <Compile Include="Supplier.cs" />
     <Compile Include="Worker.cs" />
   </ItemGroup>

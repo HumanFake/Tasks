@@ -20,5 +20,10 @@ namespace Factory
         {
             _fabric.SetBodySupplyTime(time);
         }
+
+        public void SetAccessorySupplyTime(uint time)
+        {
+            _fabric.SetAccesserySupplyTime(time);
+        }
     }
 }
