@@ -9,11 +9,7 @@ namespace UdpPlus
     {
         private const int LastMessageIdentifier = -1;
         private const int ConnectionMessageIdentifier = -2;
-
-        /*
-        „I„ƒ„„€„|„„x„…„u„„„ƒ„‘ „|„y„ƒ„„, „„„p„{-„{„p„{ „‚„p„x„}„u„‚ „~„u „y„x„r„u„ƒ„„„u„~. „N„p„„‚„y„}„u„‚ „„€„ƒ„|„u„t„~„y„u „N „q„p„z„„ „†„p„z„|„p
-        „~„u „€„q„‘„x„p„~„ „q„„„„ „‚„p„x„}„u„‚„€„} „ƒ „t„p„„„p„s„‚„p„}„}„….
-        */
+        
         private readonly List<byte> _data = new List<byte>();
         private readonly byte[] _identifier;
         private readonly int _identifierAtInt;

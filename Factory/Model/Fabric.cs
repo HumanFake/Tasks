@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using JetBrains.Annotations;
 using Model.Observers;
 
 namespace Model
 {
     public class Fabric
     {
-        private readonly IStorageObserver _observer;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private readonly List<Dealer> _dealers = new List<Dealer>();
@@ -19,22 +19,20 @@ namespace Model
         private readonly Storage<Accessory> _accessorStorage;
         private readonly CarStorage _carStorage;
 
-        private List<Supplier<Accessory>> _accessorSuppliers = new List<Supplier<Accessory>>();
+        private readonly List<Supplier<Accessory>> _accessorSuppliers = new List<Supplier<Accessory>>();
 
         private Supplier<Motor> _motorSupplier;
         private Supplier<Body> _bodySupplier;
 
-        public Fabric(IStorageObserver observer)
+        public Fabric([NotNull] IStorageObserver observer)
         {
-            _observer = observer;
-
             _factoryConfiguration = FactoryConfigurationParser.Parse();
             _threadPool = new Utils.ThreadPool(_factoryConfiguration.Workers, nameof(Fabric));
 
-            _motorStorage = new Storage<Motor>(_factoryConfiguration.MotorStorageCapacity, _observer);
-            _bodyStorage = new Storage<Body>(_factoryConfiguration.BodyStorageCapacity, _observer);
-            _carStorage = new CarStorage(_factoryConfiguration.CarStorageCapacity, _observer);
-            _accessorStorage = new Storage<Accessory>(_factoryConfiguration.AccessoryStorageCapacity, _observer);
+            _motorStorage = new Storage<Motor>(_factoryConfiguration.MotorStorageCapacity, observer);
+            _bodyStorage = new Storage<Body>(_factoryConfiguration.BodyStorageCapacity, observer);
+            _carStorage = new CarStorage(_factoryConfiguration.CarStorageCapacity, observer);
+            _accessorStorage = new Storage<Accessory>(_factoryConfiguration.AccessoryStorageCapacity, observer);
 
             _storageController = new CarStorageController(this, _carStorage);
         }
@@ -59,7 +57,7 @@ namespace Model
             CreateNewCar();
         }
 
-        public int CarsInStorage()
+        public int GetCarsInStorage()
         {
             return _carStorage.Capacity;
         }
@@ -92,11 +90,19 @@ namespace Model
             _bodySupplier.SetSupplyTime(time);
         }
 
-        public void SetAccesserySupplyTime(uint time)
+        public void SetAccessorySupplyTime(uint time)
         {
             foreach (var accessorSupplier in _accessorSuppliers)
             {
                 accessorSupplier.SetSupplyTime(time);
+            }
+        }
+
+        public void SetDealerSupplyTime(uint time)
+        {
+            foreach (var dealer in _dealers)
+            {
+                dealer.SetReleaseTimeInMillisecond(time);
             }
         }
 

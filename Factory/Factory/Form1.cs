@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 using Model;
 using Model.Observers;
 
@@ -7,12 +8,12 @@ namespace Factory
 {
     public partial class MainForm : Form, IStorageObserver
     {
-        private const uint MinimalSuplyTime = 200;
+        private const uint MinimalSupplyTime = 200;
 
         private readonly Fabric _fabric;
         private readonly FabricController _fabricController;
 
-        private bool _enabled = false;
+        private bool _enabled;
 
         public MainForm()
         {
@@ -20,15 +21,15 @@ namespace Factory
             _fabric = new Fabric(this);
             _fabricController = new FabricController(_fabric);
 
-            bodySupplyTimeText.Text = MinimalSuplyTime.ToString();
-            motorSupplyTimeText.Text = MinimalSuplyTime.ToString();
-            accessoriesSupplyTimeText.Text = MinimalSuplyTime.ToString();
+            bodySupplyTimeText.Text = MinimalSupplyTime.ToString();
+            motorSupplyTimeText.Text = MinimalSupplyTime.ToString();
+            accessoriesSupplyTimeText.Text = MinimalSupplyTime.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             _enabled = true;
-            _fabric.Start();
+            _fabricController.StartFabric();
         }
 
         public void OnStorageChange()
@@ -50,7 +51,7 @@ namespace Factory
             SetTextBox(totalMotorCountText, motorStorageState.ForAllTime.ToString());
             SetTextBox(totalAccessoryCountText, accessoryStorageState.ForAllTime.ToString());
 
-            SetTextBox(carsInStorageText, _fabric.CarsInStorage().ToString());
+            SetTextBox(carsInStorageText, _fabric.GetCarsInStorage().ToString());
         }
 
         private void SetTextBox(Control target, string text)
@@ -65,10 +66,10 @@ namespace Factory
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _fabric.Stop();
+            _fabricController.StopFabric();
         }
 
-        private void bodyCreatTimeTrackBar_ValueChanged(object sender, EventArgs e)
+        private void bodyCreateTimeTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var supplyTime = TryGetSupplyTime(bodyCreatTimeTrackBar);
             if (supplyTime == null)
@@ -80,7 +81,7 @@ namespace Factory
             _fabricController.SetBodySupplyTime(Convert.ToUInt32(supplyTime));
         }
 
-        private void motorCreatTimeTrackBar_ValueChanged(object sender, EventArgs e)
+        private void motorCreateTimeTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var supplyTime = TryGetSupplyTime(motorCreatTimeTrackBar);
             if (supplyTime == null)
@@ -92,7 +93,7 @@ namespace Factory
             _fabricController.SetMotorSupplyTime(Convert.ToUInt32(supplyTime));
         }
 
-        private void accessoryCreatTimeTrackBar_ValueChanged(object sender, EventArgs e)
+        private void accessoryCreateTimeTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var supplyTime = TryGetSupplyTime(accessoryCreatTimeTrackBar);
             if (supplyTime == null)
@@ -104,14 +105,26 @@ namespace Factory
             _fabricController.SetAccessorySupplyTime(Convert.ToUInt32(supplyTime));
         }
 
-        private uint? TryGetSupplyTime(TrackBar trackBar)
+        private void dealerReleaseTimeTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            var supplyTime = TryGetSupplyTime(dealerReleaseTimeTrackBar);
+            if (supplyTime == null)
+            {
+                return;
+            }
+
+            dealerReleaseCarTimeText.Text = supplyTime.ToString();
+            _fabricController.SetDealersReleaseTime(Convert.ToUInt32(supplyTime));
+        }
+
+        private uint? TryGetSupplyTime([NotNull] TrackBar trackBar)
         {
             if (false == _enabled)
             {
                 return null;
             }
             var supplyTimeRate = trackBar.Value;
-            var supplyTime = Convert.ToUInt32(supplyTimeRate * MinimalSuplyTime);
+            var supplyTime = Convert.ToUInt32(supplyTimeRate * MinimalSupplyTime);
 
             return supplyTime;
         }

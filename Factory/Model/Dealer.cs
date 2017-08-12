@@ -33,19 +33,19 @@ namespace Model
             {
                 while (false == cancellationToken.IsCancellationRequested)
                 {
-                    RealeseCar();
+                    ReleaseCar();
                     if (cancellationToken.IsCancellationRequested)
                     {
                         return;
                     }
 
                     var car = _storage.PopCar();
-                    Console.WriteLine(GenerateCarInforamtion(car));
+                    Console.WriteLine(GenerateCarInformation(car));
                 }
             }
         }
 
-        private string GenerateCarInforamtion(Car car)
+        private string GenerateCarInformation(Car car)
         {
             var result = $"{DateTime.Now}: Dealer {_dealerId}:" +
                 $" Auto {car.Id} (Body: <{car.Body.Id}>, Motor: {car.Motor.Id}, Accessory: <ID>)";
@@ -53,7 +53,7 @@ namespace Model
             return result;
         }
 
-        private void RealeseCar()
+        private void ReleaseCar()
         {
             Thread.Sleep((int) _releaseTimeInMillisecond);
         }

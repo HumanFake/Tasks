@@ -1,17 +1,9 @@
-﻿using System;
-using Model;
-
-namespace CliEntryPoint
+﻿namespace CliEntryPoint
 {
     static class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            var fabric = new Fabric();
-            fabric.Start();
-
-            Console.Read();
-            fabric.Stop();
         }
     }
 }

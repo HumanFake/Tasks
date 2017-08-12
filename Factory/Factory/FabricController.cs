@@ -11,6 +11,16 @@ namespace Factory
             _fabric = fabric;
         }
 
+        public void StartFabric()
+        {
+            _fabric.Start();
+        }
+
+        public void StopFabric()
+        {
+            _fabric.Stop();
+        }
+
         public void SetMotorSupplyTime(uint time)
         {
             _fabric.SetMotorSupplyTime(time);
@@ -23,7 +33,12 @@ namespace Factory
 
         public void SetAccessorySupplyTime(uint time)
         {
-            _fabric.SetAccesserySupplyTime(time);
+            _fabric.SetAccessorySupplyTime(time);
+        }
+
+        public void SetDealersReleaseTime(uint time)
+        {
+
         }
     }
 }

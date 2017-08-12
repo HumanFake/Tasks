@@ -65,6 +65,9 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.carsInStorageText = new System.Windows.Forms.TextBox();
+            this.dealerReleaseTimeTrackBar = new System.Windows.Forms.TrackBar();
+            this.label17 = new System.Windows.Forms.Label();
+            this.dealerReleaseCarTimeText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.bodyCreatTimeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.motorCreatTimeTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accessoryCreatTimeTrackBar)).BeginInit();
@@ -72,6 +75,7 @@
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dealerReleaseTimeTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // bodyCreatTimeTrackBar
@@ -83,7 +87,7 @@
             this.bodyCreatTimeTrackBar.Size = new System.Drawing.Size(45, 176);
             this.bodyCreatTimeTrackBar.TabIndex = 0;
             this.bodyCreatTimeTrackBar.Value = 1;
-            this.bodyCreatTimeTrackBar.ValueChanged += new System.EventHandler(this.bodyCreatTimeTrackBar_ValueChanged);
+            this.bodyCreatTimeTrackBar.ValueChanged += new System.EventHandler(this.bodyCreateTimeTrackBar_ValueChanged);
             // 
             // motorCreatTimeTrackBar
             // 
@@ -94,7 +98,7 @@
             this.motorCreatTimeTrackBar.Size = new System.Drawing.Size(45, 176);
             this.motorCreatTimeTrackBar.TabIndex = 0;
             this.motorCreatTimeTrackBar.Value = 1;
-            this.motorCreatTimeTrackBar.ValueChanged += new System.EventHandler(this.motorCreatTimeTrackBar_ValueChanged);
+            this.motorCreatTimeTrackBar.ValueChanged += new System.EventHandler(this.motorCreateTimeTrackBar_ValueChanged);
             // 
             // accessoryCreatTimeTrackBar
             // 
@@ -105,7 +109,7 @@
             this.accessoryCreatTimeTrackBar.Size = new System.Drawing.Size(45, 176);
             this.accessoryCreatTimeTrackBar.TabIndex = 0;
             this.accessoryCreatTimeTrackBar.Value = 1;
-            this.accessoryCreatTimeTrackBar.ValueChanged += new System.EventHandler(this.accessoryCreatTimeTrackBar_ValueChanged);
+            this.accessoryCreatTimeTrackBar.ValueChanged += new System.EventHandler(this.accessoryCreateTimeTrackBar_ValueChanged);
             // 
             // label1
             // 
@@ -432,18 +436,56 @@
             this.carsInStorageText.TabIndex = 3;
             this.carsInStorageText.Text = "0";
             // 
+            // dealerReleaseTimeTrackBar
+            // 
+            this.dealerReleaseTimeTrackBar.Location = new System.Drawing.Point(530, 22);
+            this.dealerReleaseTimeTrackBar.Minimum = 1;
+            this.dealerReleaseTimeTrackBar.Name = "dealerReleaseTimeTrackBar";
+            this.dealerReleaseTimeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.dealerReleaseTimeTrackBar.Size = new System.Drawing.Size(45, 176);
+            this.dealerReleaseTimeTrackBar.TabIndex = 0;
+            this.dealerReleaseTimeTrackBar.Value = 1;
+            this.dealerReleaseTimeTrackBar.ValueChanged += new System.EventHandler(this.dealerReleaseTimeTrackBar_ValueChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label17.Location = new System.Drawing.Point(505, 48);
+            this.label17.Name = "label17";
+            this.label17.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label17.Size = new System.Drawing.Size(19, 119);
+            this.label17.TabIndex = 1;
+            this.label17.Text = "Д\r\nи\r\nл\r\nл\r\nе\r\nр\r\nы";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // dealerReleaseCarTimeText
+            // 
+            this.dealerReleaseCarTimeText.Enabled = false;
+            this.dealerReleaseCarTimeText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.dealerReleaseCarTimeText.Location = new System.Drawing.Point(521, 208);
+            this.dealerReleaseCarTimeText.Name = "dealerReleaseCarTimeText";
+            this.dealerReleaseCarTimeText.ReadOnly = true;
+            this.dealerReleaseCarTimeText.Size = new System.Drawing.Size(40, 20);
+            this.dealerReleaseCarTimeText.TabIndex = 2;
+            this.dealerReleaseCarTimeText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 471);
+            this.Controls.Add(this.dealerReleaseCarTimeText);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label17);
             this.Controls.Add(this.totalCarsText);
             this.Controls.Add(this.carsInStorageText);
             this.Controls.Add(this.carInProgressText);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.dealerReleaseTimeTrackBar);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -463,6 +505,7 @@
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dealerReleaseTimeTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -506,6 +549,9 @@
         private System.Windows.Forms.TextBox motorSupplyTimeText;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox carsInStorageText;
+        private System.Windows.Forms.TrackBar dealerReleaseTimeTrackBar;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox dealerReleaseCarTimeText;
     }
 }
 

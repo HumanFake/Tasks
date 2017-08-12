@@ -111,7 +111,6 @@ namespace UdpPlus
         protected override void FreeManagedResources()
         {
             ThrowIfDisposed();
-            Console.Out.WriteLine("1");
             _udpClient.Close();
         }
     }

@@ -140,7 +140,7 @@ namespace TudpServer
 
         protected override void FreeManagedResources()
         {
-            //_server.Dispose();
+            _server.Dispose();
         }
     }
 }

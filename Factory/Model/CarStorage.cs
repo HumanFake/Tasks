@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Collections.Specialized;
 using Model.Observers;
 
 namespace Model

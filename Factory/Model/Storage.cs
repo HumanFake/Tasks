@@ -13,7 +13,7 @@ namespace Model
         private readonly IStorageObserver _observer;
         private readonly List<T> _products = new List<T>();
 
-        private int _totalProductsWasInStorag = 0;
+        private int _totalProductsWasInStorage;
 
         public Storage(uint maxCapacity, [NotNull] IStorageObserver observer)
         {
@@ -34,7 +34,7 @@ namespace Model
                 Console.WriteLine(typeof(T).Name + _products.Count);
                 _products.Add(motor);
 
-                _totalProductsWasInStorag++;
+                _totalProductsWasInStorage++;
                 _observer.OnStorageChange();
             }
         }
@@ -57,7 +57,7 @@ namespace Model
             }
         }
 
-        public int ProductsInStorageForAllTime => _totalProductsWasInStorag;
+        public int ProductsInStorageForAllTime => _totalProductsWasInStorage;
         public int InStock => _products.Count;
     }
 }
